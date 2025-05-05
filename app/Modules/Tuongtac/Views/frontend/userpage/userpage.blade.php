@@ -86,9 +86,9 @@ $adsense_code = '<ins class="adsbygoogle"
               
                 <!-- Tác giả -->
                 <div class="post-author">
-                    <a href="{{$post->user_url}}"><img src="{{$post->author->photo}}" alt="Author" class="author-avatar"> </a>
+                    <a href="{{ route('front.user.profile', ['id' => $post->author->id]) }}"><img src="{{$post->author->photo}}" alt="Author" class="author-avatar"> </a>
                     <div class="author-info">
-                        <h3> <a href="{{$post->user_url}}">{{$post->author->full_name}} </a></h3>
+                        <h3> <a href="{{ route('front.user.profile', ['id' => $post->author->id]) }}">{{$post->author->full_name}} </a></h3>
                         <p> {{ Carbon::parse($post->created_at)->format('d/m/Y') }} </p>
                     </div>
                 </div>

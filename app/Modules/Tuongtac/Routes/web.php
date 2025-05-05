@@ -12,6 +12,7 @@ use App\Modules\Tuongtac\Controllers\TUserpageController;
 use App\Modules\Tuongtac\Controllers\TSurveyController;
 use App\Modules\Tuongtac\Controllers\TPollController;
 use App\Modules\Tuongtac\Controllers\AdminTBlogController;
+use App\Modules\Tuongtac\Controllers\TuongtacController;
 // Define routes here
 
 Route::group(['prefix'=>'admin', 'middleware' => 'admin.auth', 'as' => 'admin.'], function(){
@@ -22,9 +23,15 @@ Route::group(['prefix'=>'admin', 'middleware' => 'admin.auth', 'as' => 'admin.']
 
 Route::group( [    'as' => 'front.' ],function(){
     // Route::resource('tcomment',  TCommentController::class);
-    Route::post('tcomment_save',[TCommentController::class,'saveComment'])->name('tcomments.savecomment');
-    Route::post('tcomment_update',[TCommentController::class,'updateComment'])->name('tcomments.updatecomment');
-    Route::post('tcomment_delete',[TCommentController::class,'deleteComment'])->name('tcomments.deletecomment');
+    Route::post('tcomments/save',[TCommentController::class,'saveComment'])->name('comments.save');
+    Route::post('tcomments/update',[TCommentController::class,'updateComment'])->name('comments.update');
+    Route::post('tcomments/delete',[TCommentController::class,'deleteComment'])->name('comments.delete');
+    Route::get('tcomments/{itemId}/{itemCode}',[TCommentController::class,'show'])->name('comments.show');
+    
+    // Social interactions routes
+    Route::post('reactions/react', [TMotionItemController::class, 'react'])->name('reactions.react');
+    Route::get('reactions/status', [TMotionItemController::class, 'getReactionStatus'])->name('reactions.status');
+    Route::post('share', [TuongtacController::class, 'processShare'])->name('share');
   
     Route::post('/tnotice/mark-as-read/{id}', [TNoticeController::class, 'markAsRead'])->name('tnotice.markAsRead');
     Route::get('tnotice',[TNoticeController::class,'show'])->name('tnotice.show');
@@ -74,5 +81,5 @@ Route::group( [    'as' => 'front.' ],function(){
     Route::get('/polls', [TPollController::class, 'index'])->name('poll.index');
     Route::post('/polls/vote', [TPollController::class, 'voteAll'])->name('poll.voteAll');
     
-   
+    Route::get('/books/fetch-names', [\App\Http\Controllers\Frontend\BookFrontendController::class, 'fetchBookNames'])->name('books.fetchNames');
 });

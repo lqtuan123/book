@@ -45,7 +45,7 @@ class GroupSeeder extends Seeder
                 'description' => $faker->paragraph(3),
                 'type_code' => $typeCode,
                 'author_id' => 1,
-                'visibility' => 'private',
+                
                 'is_private' => true,
                 'pending_members' => json_encode([]),
                 'members' => json_encode([1]),
@@ -99,7 +99,7 @@ class GroupSeeder extends Seeder
                 'description' => $faker->paragraph(3),
                 'type_code' => $typeCode,
                 'author_id' => 1,
-                'visibility' => 'public',
+                
                 'is_private' => false,
                 'pending_members' => json_encode([]),
                 'members' => json_encode($members),

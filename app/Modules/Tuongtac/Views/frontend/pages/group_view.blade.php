@@ -146,7 +146,23 @@
         @endauth
     </div>
 
-
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+    
+    @if(session('info'))
+        <div class="alert alert-info">
+            {{ session('info') }}
+        </div>
+    @endif
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="groupTabs" role="tablist">
@@ -202,7 +218,7 @@
                                         @endphp
                                         
                                         @if(!in_array(auth()->id(), $members))
-                                            <form action="{{ route('group.requestJoin', $group->id) }}" method="POST">
+                                            <form action="{{ route('group.request-join', $group->id) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary btn-sm">Tham gia</button>
                                             </form>
@@ -268,7 +284,7 @@
                                         @endphp
                                         
                                         @if(!in_array(auth()->id(), $members))
-                                            <form action="{{ route('group.requestJoin', $group->id) }}" method="POST">
+                                            <form action="{{ route('group.request-join', $group->id) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary btn-sm">Tham gia</button>
                                             </form>

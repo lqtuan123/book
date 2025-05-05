@@ -940,11 +940,12 @@ th{
   border-color: #af9aaa;
 }
 .search-form button {
-  position: absolute;
+  /* position: absolute; */
   top: 6px;
   right: 9px;
-  background: transparent;
+  /* background: transparent; */
   border: none;
+  border-radius: 5px;
 }
 
 /** Search Popup

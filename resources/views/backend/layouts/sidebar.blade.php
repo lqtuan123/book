@@ -81,6 +81,35 @@
                 
             </ul>
         </li>
+
+        <!-- Points Management Menu -->
+        <li>
+            <a href="javascript:;" class="side-menu 
+                {{ $active_menu == 'point_rules' || $active_menu == 'point_reports' ? 'side-menu--active' : '' }}">
+                <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
+                <div class="side-menu__title">
+                    Quản lý điểm
+                    <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                </div>
+            </a>
+            <ul class="{{ $active_menu == 'point_rules' || $active_menu == 'point_reports' ? 'side-menu__sub-open' : '' }}">
+                <li>
+                    <a href="{{ route('admin.points.index') }}"
+                        class="side-menu {{ $active_menu == 'point_rules' ? 'side-menu--active' : '' }}">
+                        <div class="side-menu__icon"> <i data-lucide="list"></i> </div>
+                        <div class="side-menu__title">Quy tắc điểm</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.points.reports') }}"
+                        class="side-menu {{ $active_menu == 'point_reports' ? 'side-menu--active' : '' }}">
+                        <div class="side-menu__icon"> <i data-lucide="bar-chart"></i> </div>
+                        <div class="side-menu__title">Báo cáo điểm</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
         <!-- Resource  -->
         <li>
             <a href="javascript:;"

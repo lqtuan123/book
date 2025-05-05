@@ -8,6 +8,7 @@ use App\Modules\Tuongtac\Models\TPage;
 use App\Modules\Group\Models\GroupMemeber;
 use App\Models\User;
 use App\Modules\Tuongtac\Models\TBlog;
+use League\Flysystem\Visibility;
 
 class Group extends Model
 {
@@ -18,8 +19,7 @@ class Group extends Model
         'slug',
         'description',
         'type_code',
-        'author_id',
-        'visibility', // public, private, secret
+        'author_id', // public, private, secret
         'pending_members',
         'members',
         'moderators', // Danh sách ID phó nhóm
