@@ -554,6 +554,11 @@ function submitComment(itemId, itemCode = 'tblog') {
         return;
     }
     
+    // Kiểm tra đăng nhập trước khi thực hiện, không chuyển hướng ngay
+    if (!checkLoginRequired()) {
+        return; // Đã hiển thị modal đăng nhập rồi, không cần làm gì thêm
+    }
+    
     const commentInput = document.getElementById('comment-input-' + itemId);
     if (!commentInput) return;
     
@@ -596,17 +601,20 @@ function submitComment(itemId, itemCode = 'tblog') {
             // Update comment count in all UIs showing this item
             const newCount = data.newCount || 0;
             updateCommentCountUI(itemId, newCount);
+        } else if (data.msg === 'chưa đăng nhập') {
+            // Xử lý người dùng chưa đăng nhập
+            showLoginModal();
         } else {
-            if (data.msg === 'chưa đăng nhập') {
-                window.location.href = `/front/login`;
-            } else {
-                alert(data.msg);
-            }
+            alert(data.msg);
         }
     })
     .catch(error => {
         console.error('Error:', error);
         spinner.style.display = 'none';
+        
+        if (error.message === 'Unauthenticated') {
+            showLoginModal();
+        }
     });
 }
 
@@ -636,9 +644,9 @@ function updateCommentCountUI(itemId, count) {
 function replyToComment(parentId, itemId, itemCode = 'tblog') {
     console.log('Đang trả lời bình luận:', parentId, 'của item:', itemId, 'kiểu:', itemCode);
     
-    if (!isUserLoggedIn) {
-        showLoginModal();
-        return;
+    // Kiểm tra đăng nhập trước khi thực hiện, không chuyển hướng ngay
+    if (!checkLoginRequired()) {
+        return; // Đã hiển thị modal đăng nhập rồi, không cần làm gì thêm
     }
     
     const replyInput = document.getElementById('reply-input-' + parentId);
@@ -1085,6 +1093,11 @@ function editComment(commentId, content, itemId, itemCode) {
  * @param {string} itemCode - Type of content
  */
 function toggleCommentLike(commentId, itemId, itemCode) {
+    // Kiểm tra đăng nhập trước khi thực hiện, không chuyển hướng ngay
+    if (!checkLoginRequired()) {
+        return; // Đã hiển thị modal đăng nhập rồi, không cần làm gì thêm
+    }
+    
     const likeIcon = document.querySelector(`#comment-like-${commentId} i`);
     const likeCount = document.querySelector(`#comment-like-count-${commentId}`);
     
@@ -1125,17 +1138,20 @@ function toggleCommentLike(commentId, itemId, itemCode) {
                 likeIcon.classList.remove('text-blue-500');
                 likeIcon.classList.add('far');
             }
+        } else if (data.message === 'Unauthenticated') {
+            // Xử lý người dùng chưa đăng nhập
+            showLoginModal();
         } else {
-            if (data.message === 'Unauthenticated') {
-                window.location.href = `/front/login`;
-            } else {
-                alert(data.message || 'Đã xảy ra lỗi');
-            }
+            alert(data.message || 'Đã xảy ra lỗi');
         }
     })
     .catch(error => {
         console.error('Error:', error);
         spinner.style.display = 'none';
+        
+        if (error.message === 'Unauthenticated') {
+            showLoginModal();
+        }
     });
 }
 
@@ -1149,6 +1165,11 @@ function toggleCommentLike(commentId, itemId, itemCode) {
  * @param {string} itemCode - Type of content
  */
 function replyToReply(parentId, replyToId, replyToName, itemId, itemCode) {
+    // Kiểm tra đăng nhập trước khi thực hiện, không chuyển hướng ngay
+    if (!checkLoginRequired()) {
+        return; // Đã hiển thị modal đăng nhập rồi, không cần làm gì thêm
+    }
+    
     // Show the reply form for the parent comment
     toggleReplyForm(parentId);
     
