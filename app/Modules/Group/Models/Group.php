@@ -49,8 +49,7 @@ class Group extends Model
 
     public function ratings()
     {
-        return $this->hasOne(\App\Modules\Tuongtac\Models\TVoteItem::class, 'item_id')
-                    ->where('item_code', 'group');
+        return $this->hasMany(\App\Models\Rating::class, 'book_id');
     }
 
     // Helper methods

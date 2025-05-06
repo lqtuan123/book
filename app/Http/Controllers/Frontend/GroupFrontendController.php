@@ -19,6 +19,7 @@ use App\Models\PollVote;
 use App\Modules\Tuongtac\Models\TMotionItem;
 use App\Modules\Tuongtac\Models\TRecommend;
 use App\Modules\Tuongtac\Models\TMotion;
+use App\Models\Rating;
 
 class GroupFrontendController extends Controller
 {
@@ -1031,82 +1032,40 @@ class GroupFrontendController extends Controller
     {
         $request->validate([
             'point' => 'required|integer|min:1|max:5',
-            'group_id' => 'required|exists:groups,id',
         ]);
 
-        if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để đánh giá'], 401);
-        }
-
         $userId = Auth::id();
-        $point = $request->point;
-        $itemId = $request->group_id;
-        $itemCode = 'group';
-
-        // Find vote record
-        $voteRecord = \App\Modules\Tuongtac\Models\TVoteItem::where('item_id', $itemId)
-                        ->where('item_code', $itemCode)
-                        ->first();
-
-        if (!$voteRecord) {
-            // Create new vote record if it doesn't exist
-            $votes = [$userId => $point];
-            $data = [
-                'item_id' => $itemId,
-                'item_code' => $itemCode,
-                'count' => 1,
-                'point' => $point,
-                'votes' => json_encode($votes),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-            \App\Modules\Tuongtac\Models\TVoteItem::create($data);
-            
-            return response()->json([
-                'success' => true, 
-                'averagePoint' => $point,
-                'count' => 1
-            ]);
+        if (!$userId) {
+            return response()->json(['success' => false, 'msg' => 'Bạn cần đăng nhập!']);
         }
-
-        // Update existing vote record
-        $votes = json_decode($voteRecord->votes, true);
-
-        // Update or add user's vote
-        $votes[$userId] = $point;
-
-        // Update count and average point
-        $count = count($votes);
-        $totalPoints = array_sum($votes);
-        $averagePoint = $totalPoints / $count;
-
-        $voteRecord->count = $count;
-        $voteRecord->point = $averagePoint;
-        $voteRecord->votes = json_encode($votes);
-        $voteRecord->save();
-
+        
+        $point = $request->point;
+        $groupId = $request->group_id;
+        
+        // Sử dụng RatingService để tạo/cập nhật đánh giá
+        $ratingService = app(\App\Services\RatingService::class);
+        $rating = $ratingService->createOrUpdateRating($groupId, $userId, $point);
+        
         return response()->json([
             'success' => true, 
-            'averagePoint' => $averagePoint,
-            'count' => $count
+            'averagePoint' => $rating->book->average_rating,
+            'count' => $rating->book->rating_count
         ]);
     }
 
     // Phương thức hỗ trợ để thêm dữ liệu đánh giá vào group
     private function addRatingData($group)
     {
-        $voteItem = \App\Modules\Tuongtac\Models\TVoteItem::where('item_id', $group->id)
-            ->where('item_code', 'group')
-            ->first();
-
-        $group->vote_count = $voteItem?->count ?? 0;
-        $group->vote_average = $voteItem?->point ?? 0;
+        $group->vote_count = $group->rating_count ?? 0;
+        $group->vote_average = $group->average_rating ?? 0;
 
         // Nếu đăng nhập, lấy đánh giá của người dùng
-        if (Auth::check() && $voteItem) {
-            $votes = is_string($voteItem->votes) ? json_decode($voteItem->votes, true) : $voteItem->votes;
+        if (Auth::check()) {
             $userId = Auth::id();
-            $group->user_vote = $votes[$userId] ?? null;
+            $userRating = Rating::where('book_id', $group->id)
+                ->where('user_id', $userId)
+                ->first();
+            $group->user_vote = $userRating?->rating ?? null;
         }
 
         return $group;

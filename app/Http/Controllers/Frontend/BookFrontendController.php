@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Modules\Tuongtac\Models\TRecommend;
-use App\Modules\Tuongtac\Models\TVoteItem;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -73,12 +73,10 @@ class BookFrontendController extends Controller
 
             // Thêm thông tin vote và bookmark cho mỗi sách
             foreach ($books as $book) {
-                $voteItem = TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
-                $book->vote_count = $voteItem?->count ?? 0;
-                $book->vote_point = $voteItem?->point ?? 0;
-                $book->vote_average = $voteItem?->point ?? 0;
+                $book->vote_count = $book->rating_count ?? 0;
+                $book->vote_point = $book->average_rating ?? 0;
+                $book->vote_average = $book->average_rating ?? 0;
                 $book->is_bookmarked = in_array($book->id, $bookmarkedIds);
-                $book->vote_count = $voteItem?->count ?? 0;
             }
 
             $booktypes = BookType::withCount('activeBooks')
@@ -270,9 +268,7 @@ class BookFrontendController extends Controller
             $tagNames = Tag::whereIn('id', $tags)->pluck('title');
 
             // Lấy thông tin đánh giá sao
-            $voteItem = TVoteItem::where('item_id', $book->id)
-                ->where('item_code', 'book')
-                ->first();
+            $voteItem = Rating::where('book_id', $book->id)->first();
 
             $book->vote_count = $voteItem?->count ?? 0;
             $book->vote_average = $voteItem?->point ?? 0;
@@ -342,10 +338,9 @@ class BookFrontendController extends Controller
 
             // Thêm thông tin vote và bookmark cho mỗi sách
             foreach ($books as $book) {
-                $voteItem = TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
-                $book->vote_count = $voteItem?->count ?? 0;
-                $book->vote_point = $voteItem?->point ?? 0;
-                $book->vote_average = $voteItem?->point ?? 0;
+                $book->vote_count = $book->rating_count ?? 0;
+                $book->vote_point = $book->average_rating ?? 0;
+                $book->vote_average = $book->average_rating ?? 0;
                 $book->is_bookmarked = in_array($book->id, $bookmarkedIds);
             }
 
@@ -405,10 +400,9 @@ class BookFrontendController extends Controller
 
             // Thêm thông tin vote và bookmark cho mỗi sách
             foreach ($books as $book) {
-                $voteItem = TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
-                $book->vote_count = $voteItem?->count ?? 0;
-                $book->vote_point = $voteItem?->point ?? 0;
-                $book->vote_average = $voteItem?->point ?? 0;
+                $book->vote_count = $book->rating_count ?? 0;
+                $book->vote_point = $book->average_rating ?? 0;
+                $book->vote_average = $book->average_rating ?? 0;
                 $book->is_bookmarked = in_array($book->id, $bookmarkedIds);
             }
 
@@ -473,10 +467,9 @@ class BookFrontendController extends Controller
 
             // Thêm thông tin vote và bookmark cho mỗi sách
             foreach ($books as $book) {
-                $voteItem = TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
-                $book->vote_count = $voteItem?->count ?? 0;
-                $book->vote_point = $voteItem?->point ?? 0;
-                $book->vote_average = $voteItem?->point ?? 0;
+                $book->vote_count = $book->rating_count ?? 0;
+                $book->vote_point = $book->average_rating ?? 0;
+                $book->vote_average = $book->average_rating ?? 0;
                 $book->is_bookmarked = in_array($book->id, $bookmarkedIds);
             }
 
@@ -583,10 +576,9 @@ class BookFrontendController extends Controller
 
             // Thêm thông tin vote và bookmark cho mỗi sách
             foreach ($books as $book) {
-                $voteItem = TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
-                $book->vote_count = $voteItem?->count ?? 0;
-                $book->vote_point = $voteItem?->point ?? 0;
-                $book->vote_average = $voteItem?->point ?? 0;
+                $book->vote_count = $book->rating_count ?? 0;
+                $book->vote_point = $book->average_rating ?? 0;
+                $book->vote_average = $book->average_rating ?? 0;
                 $book->is_bookmarked = in_array($book->id, $bookmarkedIds);
             }
 
@@ -681,9 +673,9 @@ class BookFrontendController extends Controller
     {
         $data['item_id'] = $item_id;
         $data['item_code'] = $item_code;
-
-        $data['voteRecord'] = DB::table('t_vote_items')->where('item_id', $item_id)->first();
-
+        
+        $data['voteRecord'] = Rating::where('book_id', $item_id)->first();
+        
         $html = view('frontend.book.show', $data)->render();
         return $html;
     }

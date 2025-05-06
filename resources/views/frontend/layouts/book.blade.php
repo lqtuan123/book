@@ -44,21 +44,21 @@ $books = \App\Modules\Book\Models\Book::with(['user', 'bookType'])
 
 // Thêm đánh giá cho tất cả các danh sách sách
 $latestBooks = $latestBooks->map(function ($book) {
-    $voteItem = \App\Modules\Tuongtac\Models\TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
+    $voteItem = \App\Models\Rating::where('book_id', $book->id)->first();
     $book->average_rating = $voteItem?->point ?? 0;
     $book->rating_count = $voteItem?->count ?? 0;
     return $book;
 });
 
 $featuredBooks = $featuredBooks->map(function ($book) {
-    $voteItem = \App\Modules\Tuongtac\Models\TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
+    $voteItem = \App\Models\Rating::where('book_id', $book->id)->first();
     $book->average_rating = $voteItem?->point ?? 0;
     $book->rating_count = $voteItem?->count ?? 0;
     return $book;
 });
 
 $mostViewedBooks = $mostViewedBooks->map(function ($book) {
-    $voteItem = \App\Modules\Tuongtac\Models\TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
+    $voteItem = \App\Models\Rating::where('book_id', $book->id)->first();
     $book->average_rating = $voteItem?->point ?? 0;
     $book->rating_count = $voteItem?->count ?? 0;
     return $book;
@@ -67,7 +67,7 @@ $mostViewedBooks = $mostViewedBooks->map(function ($book) {
 // Cập nhật thêm đánh giá cho sách đã đọc gần đây nếu có
 if (isset($recentBooks) && $recentBooks->count() > 0) {
     $recentBooks = $recentBooks->map(function ($book) {
-        $voteItem = \App\Modules\Tuongtac\Models\TVoteItem::where('item_id', $book->id)->where('item_code', 'book')->first();
+        $voteItem = \App\Models\Rating::where('book_id', $book->id)->first();
         $book->average_rating = $voteItem?->point ?? 0;
         $book->rating_count = $voteItem?->count ?? 0;
         return $book;
