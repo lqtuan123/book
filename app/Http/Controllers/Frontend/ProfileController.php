@@ -107,7 +107,6 @@ class ProfileController extends Controller
         // Bài viết của người dùng
         $userPosts = DB::table('t_blogs as b')
             ->leftJoin('users as u', 'b.user_id', '=', 'u.id')
-            ->leftJoin('t_userpages as up', 'b.user_id', '=', 'up.user_id')
             ->where('b.user_id', $userId)
             ->select(
                 'b.*',

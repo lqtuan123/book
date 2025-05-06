@@ -115,7 +115,7 @@ $groups = Group::where('status', 'active')
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('front.userpages.hornor')}}" class="flex items-center text-gray-700 hover:text-blue-600 {{ request()->routeIs('front.userpages.hornor') ? 'text-blue-600 font-medium' : '' }}">
+                    <a href="{{route('front.leaderboard')}}" class="flex items-center text-gray-700 hover:text-blue-600 {{ request()->routeIs('front.leaderboard') ? 'text-blue-600 font-medium' : '' }}">
                         <i class="fas fa-award mr-2 text-sm"></i>
                         Người dùng vinh danh
                     </a>
@@ -277,7 +277,7 @@ $groups = Group::where('status', 'active')
                 <div class="flex items-center">
                     <img src="{{ $newuser->photo }}" alt="{{ $newuser->full_name }}" class="w-10 h-10 rounded-full object-cover">
                     <div class="ml-3">
-                        <a href="{{ TPage::getPageUrl($newuser->id, 'user') }}" class="text-sm font-medium text-gray-800 hover:text-blue-600">
+                        <a href="{{ route('front.user.profile', $newuser->id) }}" class="text-sm font-medium text-gray-800 hover:text-blue-600">
                             {{ $newuser->full_name }}
                         </a>
                     </div>
@@ -285,7 +285,7 @@ $groups = Group::where('status', 'active')
                 @endforeach
             </div>
             
-            <a href="{{ route('front.userpages.hornor') }}" class="block text-center text-blue-500 text-sm mt-4 hover:text-blue-700">Xem tất cả</a>
+            <a href="{{ route('front.leaderboard') }}" class="block text-center text-blue-500 text-sm mt-4 hover:text-blue-700">Xem tất cả</a>
         </div>
         
         <!-- Ad Banner -->

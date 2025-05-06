@@ -85,7 +85,7 @@ class TBlogController extends Controller
         $data['item_code'] = 'tblog';
         foreach ($data['posts'] as $blog) {
 
-            $blog->user_url = \App\Modules\Tuongtac\Models\TPage::getPageUrl($blog->user_id, 'user');
+            $blog->user_url = route('front.user.profile', $blog->user_id);
             $blog->tags = \DB::table('t_tags')
                 ->join('t_tag_items', 't_tags.id', '=', 't_tag_items.tag_id')
                 ->where('t_tag_items.item_id', $blog->id)
@@ -196,7 +196,7 @@ class TBlogController extends Controller
 
         $data['post']->author = \App\Models\User::find($tblog->user_id);
         $data['post']->commenthtml = \App\Modules\Tuongtac\Controllers\TCommentController::getCommentActive($tblog->id, 'tblog');
-        $data['post']->user_url = \App\Modules\Tuongtac\Models\TPage::getPageUrl($tblog->user_id, 'user');
+        $data['post']->user_url = route('front.user.profile', $tblog->user_id);
         
         $data['post']->user_has_liked = isset(auth()->user()->id) ? TMotion::checkUserReacted($data['post']->id, 'tblog', auth()->user()->id) : false;
         $data['post']->is_bookmarked = isset(auth()->user()->id) ? \App\Modules\Tuongtac\Models\TRecommend::hasBookmarked($data['post']->id, 'tblog') : false;
@@ -253,7 +253,7 @@ class TBlogController extends Controller
         $data['menutags'] = TTag::where('slug', '<>', 'rao-vat')->orderBy('hit')->limit(10)->get();
         $data['item_code'] = 'tblog';
         foreach ($data['posts'] as $blog) {
-            $blog->user_url = \App\Modules\Tuongtac\Models\TPage::getPageUrl($blog->user_id, 'user');
+            $blog->user_url = route('front.user.profile', $blog->user_id);
 
             // $blog->user_url  = "";
             // $userpage = TUserpage::where('user_id',$blog->user_id)->first();
@@ -332,7 +332,7 @@ class TBlogController extends Controller
         $data['menutags'] = TTag::where('slug', '<>', 'rao-vat')->orderBy('hit')->limit(10)->get();
         $data['item_code'] = 'tblog';
         foreach ($data['posts'] as $blog) {
-            $blog->user_url = \App\Modules\Tuongtac\Models\TPage::getPageUrl($blog->user_id, 'user');
+            $blog->user_url = route('front.user.profile', $blog->user_id);
 
             // $blog->user_url  = "";
             // $userpage = TUserpage::where('user_id',$blog->user_id)->first();
@@ -406,7 +406,7 @@ class TBlogController extends Controller
         $data['menutags'] = TTag::where('slug', '<>', 'rao-vat')->orderBy('hit')->limit(10)->get();
         $data['item_code'] = 'tblog';
         foreach ($data['posts'] as $blog) {
-            $blog->user_url = \App\Modules\Tuongtac\Models\TPage::getPageUrl($blog->user_id, 'user');
+            $blog->user_url = route('front.user.profile', $blog->user_id);
 
             // $blog->user_url  = "";
             // $userpage = TUserpage::where('user_id',$blog->user_id)->first();
@@ -509,7 +509,7 @@ class TBlogController extends Controller
         $data['item_code'] = 'tblog';
 
         foreach ($data['posts'] as $blog) {
-            $blog->user_url = \App\Modules\Tuongtac\Models\TPage::getPageUrl($blog->user_id, 'user');
+            $blog->user_url = route('front.user.profile', $blog->user_id);
             $blog->commenthtml = \App\Modules\Tuongtac\Controllers\TCommentController::getCommentActive($blog->id, 'tblog');
             $blog->comment_count = TComment::where('item_id', $blog->id)
                 ->where('item_code', 'tblog')
@@ -796,7 +796,7 @@ class TBlogController extends Controller
 
         // Redirect dựa trên điều kiện
         if (isset($page)) {
-            return redirect()->route('front.tpage.view', $page->slug)->with('success', 'Bài viết đã được thêm thành công!');
+            return redirect()->route('group.show', $page->item_id)->with('success', 'Bài viết đã được thêm thành công!');
         } elseif ($request->group_id) {
             // Nếu bài viết thuộc về nhóm, chuyển hướng đến trang chi tiết nhóm
             return redirect()->route('group.show', $request->group_id)->with('success', 'Bài viết đã được thêm thành công!');
@@ -1118,7 +1118,7 @@ class TBlogController extends Controller
             if ($request->frompage) {
                 $page = TPage::where('slug', $request->frompage)->first();
                 if ($page)
-                    return redirect()->route('front.tpage.view', $request->frompage)->with('success', 'Bài viết đã được cập nhật!');
+                    return redirect()->route('group.show', $page->item_id)->with('success', 'Bài viết đã được cập nhật!');
             }
             return redirect()->route('front.tblogs.show', $post->slug)->with('success', 'Bài viết đã được cập nhật!');
         } else {

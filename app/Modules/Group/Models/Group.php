@@ -222,9 +222,13 @@ class Group extends Model
             $page = TPage::create($data);
         }
         
-        
-        return route('front.tpage.view',$page->slug);
-        
+        return route('group.show', $id);
     }
    
+    public function getUrl()
+    {
+        $id = $this->id;  
+        if (empty($id)) return ' ';
+        return route('group.show',$id);
+    }
 }

@@ -24,4 +24,4 @@ class TPollController extends Controller
     {
         return redirect()->back()->with('info', 'Chức năng này đang được phát triển');
     }
-}
+} 

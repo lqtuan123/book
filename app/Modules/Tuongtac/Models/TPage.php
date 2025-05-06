@@ -28,7 +28,7 @@ class TPage extends Model
         } else {
             $userpage = self::where('user_id', $userId)->first();
             if ($userpage) {
-                return route('front.tpage.view', $userpage->slug);
+                return route('group.show', $userpage->item_id);
             }
             return route('front.user.profile', ['id' => $userId]);
         }
