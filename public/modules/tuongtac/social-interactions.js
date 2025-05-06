@@ -533,13 +533,16 @@ function loadComments(itemId, itemCode = 'tblog') {
  * Initialize dropdown menus for comments
  */
 function initializeCommentDropdowns() {
-    document.querySelectorAll('.comment-dropdown-toggle').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.nextElementSibling;
-            dropdown.classList.toggle('hidden');
-        });
-    });
+    // Không còn cần sử dụng dropdown-toggle, nhưng vẫn giữ hàm này
+    // để tương thích với phần code gọi đến nó ở các nơi khác
+    
+    // Cũ: document.querySelectorAll('.comment-dropdown-toggle').forEach(button => {
+    //    button.addEventListener('click', function(e) {
+    //        e.stopPropagation();
+    //        const dropdown = this.nextElementSibling;
+    //        dropdown.classList.toggle('hidden');
+    //    });
+    // });
 }
 
 /**
@@ -649,36 +652,78 @@ function replyToComment(parentId, itemId, itemCode = 'tblog') {
         return; // Đã hiển thị modal đăng nhập rồi, không cần làm gì thêm
     }
     
+    // Kiểm tra xem button có data attributes không, nếu có và tham số không hợp lệ thì lấy từ data
+    if (event && event.currentTarget) {
+        const button = event.currentTarget;
+        if (!parentId && button.dataset.parentId) {
+            parentId = parseInt(button.dataset.parentId);
+        }
+        if (!itemId && button.dataset.itemId) {
+            itemId = parseInt(button.dataset.itemId);
+        }
+        if (!itemCode && button.dataset.itemCode) {
+            itemCode = button.dataset.itemCode;
+        }
+    }
+    
+    console.log('Sử dụng dữ liệu đã kiểm tra:', { parentId, itemId, itemCode });
+    
     const replyInput = document.getElementById('reply-input-' + parentId);
-    if (!replyInput) return;
+    if (!replyInput) {
+        console.error('Không tìm thấy input reply với ID:', 'reply-input-' + parentId);
+        return;
+    }
     
     const content = replyInput.value.trim();
-    if (!content) return;
+    if (!content) {
+        console.error('Nội dung trả lời trống');
+        return;
+    }
     
     // Hiển thị spinner
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'block';
     
-    // Lấy CSRF token
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || window.csrfToken;
+    // Lấy CSRF token mới mỗi lần gọi API
+    let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!csrfToken) {
+        csrfToken = window.csrfToken;
+    }
+    
+    // Kiểm tra xem có token được lưu từ sự kiện like gần đây không
+    if (window.lastCsrfToken) {
+        console.log('Sử dụng token đã lưu từ sự kiện trước đó');
+        csrfToken = window.lastCsrfToken;
+    }
+    
+    console.log('Reply to comment with token:', csrfToken);
+    console.log('Reply data:', { itemId, itemCode, content, parentId });
     
     // Gửi request để lưu trả lời
     fetch('/tcomments/save', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
+            'X-CSRF-TOKEN': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({
             item_id: itemId,
             item_code: itemCode, // Đảm bảo gửi đúng itemCode
             content: content,
             parent_id: parentId
-        })
+        }),
+        credentials: 'same-origin'
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         spinner.style.display = 'none';
+        console.log('Reply response:', data);
         
         if (data.status) {
             // Clear input
@@ -694,13 +739,18 @@ function replyToComment(parentId, itemId, itemCode = 'tblog') {
             if (data.newCount) {
                 updateCommentCountUI(itemId, data.newCount);
             }
+            
+            // Cập nhật lại CSRF token sau khi thành công (nếu có trong response)
+            if (data.csrf_token) {
+                updateCsrfToken(data.csrf_token);
+            }
         } else if (data.message === 'Unauthenticated' || data.msg === 'chưa đăng nhập') {
             // Xử lý người dùng chưa đăng nhập
             showLoginModal();
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error in replyToComment:', error);
         spinner.style.display = 'none';
         
         if (error.message === 'Unauthenticated') {
@@ -716,7 +766,10 @@ function replyToComment(parentId, itemId, itemCode = 'tblog') {
  */
 function toggleReplyForm(commentId) {
     const replyForm = document.getElementById('reply-form-' + commentId);
-    if (!replyForm) return;
+    if (!replyForm) {
+        console.error('Không tìm thấy form reply với ID:', 'reply-form-' + commentId);
+        return;
+    }
     
     // Toggle display
     if (replyForm.style.display === 'none' || replyForm.style.display === '') {
@@ -1106,21 +1159,47 @@ function toggleCommentLike(commentId, itemId, itemCode) {
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'block';
     
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || window.csrfToken;
+    // Lưu trạng thái của form reply nếu đang mở
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+    let replyFormWasVisible = false;
+    let replyInputValue = '';
+    
+    if (replyForm && replyForm.style.display !== 'none') {
+        replyFormWasVisible = true;
+        const replyInput = document.getElementById(`reply-input-${commentId}`);
+        if (replyInput) {
+            replyInputValue = replyInput.value;
+        }
+    }
+    
+    // Lấy CSRF token mới mỗi lần gọi API
+    let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!csrfToken) {
+        csrfToken = window.csrfToken;
+    }
+    
+    console.log('Like comment with token:', csrfToken);
     
     fetch('/comment-likes/toggle', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
+            'X-CSRF-TOKEN': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({
             comment_id: commentId,
             item_id: itemId,
             item_code: itemCode
-        })
+        }),
+        credentials: 'same-origin'
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         spinner.style.display = 'none';
         
@@ -1138,6 +1217,23 @@ function toggleCommentLike(commentId, itemId, itemCode) {
                 likeIcon.classList.remove('text-blue-500');
                 likeIcon.classList.add('far');
             }
+            
+            // Cập nhật lại CSRF token sau khi thành công (nếu có trong response)
+            if (data.csrf_token) {
+                updateCsrfToken(data.csrf_token);
+            }
+            
+            // Khôi phục trạng thái form reply nếu đã mở trước đó
+            if (replyFormWasVisible && replyForm) {
+                setTimeout(() => {
+                    replyForm.style.display = 'flex';
+                    const replyInput = document.getElementById(`reply-input-${commentId}`);
+                    if (replyInput && replyInputValue) {
+                        replyInput.value = replyInputValue;
+                        replyInput.focus();
+                    }
+                }, 100);
+            }
         } else if (data.message === 'Unauthenticated') {
             // Xử lý người dùng chưa đăng nhập
             showLoginModal();
@@ -1146,11 +1242,23 @@ function toggleCommentLike(commentId, itemId, itemCode) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error in toggleCommentLike:', error);
         spinner.style.display = 'none';
         
         if (error.message === 'Unauthenticated') {
             showLoginModal();
+        }
+        
+        // Khôi phục trạng thái form reply nếu đã mở trước đó
+        if (replyFormWasVisible && replyForm) {
+            setTimeout(() => {
+                replyForm.style.display = 'flex';
+                const replyInput = document.getElementById(`reply-input-${commentId}`);
+                if (replyInput && replyInputValue) {
+                    replyInput.value = replyInputValue;
+                    replyInput.focus();
+                }
+            }, 100);
         }
     });
 }
@@ -1249,6 +1357,34 @@ addEmoji = function(itemId, event, itemCode) {
 };
 
 /**
+ * Cập nhật CSRF token nếu cần
+ * 
+ * @param {string} newToken - Token CSRF mới
+ */
+function updateCsrfToken(newToken) {
+    if (!newToken) return;
+    
+    // Cập nhật token trong meta tag
+    let csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    if (csrfMeta) {
+        csrfMeta.setAttribute('content', newToken);
+    } else {
+        // Tạo meta tag mới nếu không tồn tại
+        csrfMeta = document.createElement('meta');
+        csrfMeta.name = 'csrf-token';
+        csrfMeta.content = newToken;
+        document.head.appendChild(csrfMeta);
+    }
+    
+    // Cập nhật biến global nếu có
+    if (window.csrfToken) {
+        window.csrfToken = newToken;
+    }
+    
+    console.log('CSRF token đã được cập nhật');
+}
+
+/**
  * Initialize social interactions
  */
 function initSocialInteractions() {
@@ -1344,7 +1480,7 @@ function initSocialInteractions() {
         }
     });
     
-    // Initialize dropdown menus
+    // Initialize dropdown menus for posts
     document.querySelectorAll('.post-dropdown .dropdown-toggle').forEach(button => {
         button.addEventListener('click', function(e) {
             e.stopPropagation();

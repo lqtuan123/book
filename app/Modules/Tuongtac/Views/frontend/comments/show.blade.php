@@ -13,26 +13,6 @@
                     <img src="{{ $comment->photo ? : asset('assets/images/placeholder.jpg') }}" alt="{{ $comment->full_name }}" class="w-9 h-9 rounded-full mr-3 object-cover">
                     <div class="flex-1">
                         <div class="bg-gray-100 rounded-lg p-3 relative">
-                            <div class="absolute right-2 top-2">
-                                <div class="dropdown relative">
-                                    <button class="text-gray-500 hover:text-gray-700 dropdown-toggle">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                    <div class="dropdown-menu absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg py-1 z-10 hidden">
-                                        @if ($curuser && ($curuser->id == $comment->user_id || $curuser->role == 'admin'))
-                                            <button onclick="editComment({{ $comment->id }}, '{{ htmlspecialchars($comment->content, ENT_QUOTES) }}', {{ $item_id }}, '{{ $item_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-edit text-blue-500 mr-2"></i> Sửa
-                                            </button>
-                                            <button onclick="deleteComment({{ $comment->id }}, {{ $item_id }}, '{{ $item_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-trash-alt text-red-500 mr-2"></i> Xóa
-                                            </button>
-                                        @endif
-                                        <button onclick="toggleReplyForm({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <i class="fas fa-reply text-green-500 mr-2"></i> Trả lời
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                             <h4 class="font-medium text-gray-800">{{ $comment->full_name }}</h4>
                             <p class="text-gray-700">{!! $comment->content !!}</p>
                         </div>
@@ -40,6 +20,16 @@
                             <span>{{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</span>
                             <span class="mx-1">·</span>
                             <button onclick="toggleReplyForm({{ $comment->id }})" class="hover:text-gray-700">Trả lời</button>
+                            @if ($curuser && ($curuser->id == $comment->user_id || $curuser->role == 'admin'))
+                                <span class="mx-1">·</span>
+                                <button onclick="deleteComment({{ $comment->id }}, {{ $item_id }}, '{{ $item_code }}')" class="hover:text-red-500">
+                                    Xóa
+                                </button>
+                                <span class="mx-1">·</span>
+                                <button onclick="editComment({{ $comment->id }}, '{{ htmlspecialchars($comment->content, ENT_QUOTES) }}', {{ $item_id }}, '{{ $item_code }}')" class="hover:text-blue-500">
+                                    Sửa
+                                </button>
+                            @endif
                             <span class="mx-1">·</span>
                             <button id="comment-like-{{ $comment->id }}" 
                                     class="comment-like-btn hover:text-gray-700 flex items-center" 
@@ -57,7 +47,11 @@
                             <div class="relative flex-1">
                                 <input type="text" id="reply-input-{{ $comment->id }}" placeholder="Viết câu trả lời..." class="reply-input w-full bg-gray-100 rounded-full px-3 py-1 text-sm focus:outline-none">
                                 <div class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                                    <button class="text-gray-400 hover:text-gray-600" onclick="replyToComment({{ $comment->id }}, {{ $item_id }}, '{{ $item_code }}')">
+                                    <button class="text-gray-400 hover:text-gray-600" 
+                                            onclick="replyToComment({{ $comment->id }}, {{ $item_id }}, '{{ $item_code }}')" 
+                                            data-parent-id="{{ $comment->id }}" 
+                                            data-item-id="{{ $item_id }}" 
+                                            data-item-code="{{ $item_code }}">
                                         <i class="fas fa-paper-plane"></i>
                                     </button>
                                 </div>
@@ -77,33 +71,6 @@
                                             <img src="{{ $reply->photo ? : asset('assets/images/placeholder.jpg') }}" alt="{{ $reply->full_name }}" class="w-7 h-7 rounded-full mr-2 object-cover">
                                             <div class="flex-1">
                                                 <div class="bg-gray-100 rounded-lg p-2 relative">
-                                                    <div class="absolute right-2 top-1">
-                                                        <div class="dropdown relative">
-                                                            <button class="text-gray-500 hover:text-gray-700 dropdown-toggle text-xs">
-                                                                <i class="fas fa-ellipsis-h"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg py-1 z-10 hidden">
-                                                                @if ($curuser && ($curuser->id == $reply->user_id || $curuser->role == 'admin'))
-                                                                    <button onclick="editComment({{ $reply->id }}, '{{ htmlspecialchars($reply->content, ENT_QUOTES) }}', {{ $item_id }}, '{{ $item_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                                        <i class="fas fa-edit text-blue-500 mr-2"></i> Sửa
-                                                                    </button>
-                                                                    <button onclick="deleteComment({{ $reply->id }}, {{ $item_id }}, '{{ $item_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                                        <i class="fas fa-trash-alt text-red-500 mr-2"></i> Xóa
-                                                                    </button>
-                                                                @endif
-                                                                <button 
-                                                                    class="reply-to-reply-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                                    data-parent-id="{{ $comment->id }}"
-                                                                    data-reply-to-id="{{ $reply->id }}"
-                                                                    data-reply-to-name="{{ $reply->full_name }}"
-                                                                    data-item-id="{{ $item_id }}"
-                                                                    data-item-code="{{ $item_code }}"
-                                                                >
-                                                                    <i class="fas fa-reply text-green-500 mr-2"></i> Trả lời
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                     <h4 class="font-medium text-gray-800 text-sm">{{ $reply->full_name }}</h4>
                                                     <p class="text-gray-700 text-sm">{!! $reply->content !!}</p>
                                                 </div>
@@ -120,6 +87,16 @@
                                                     >
                                                         Trả lời
                                                     </button>
+                                                    @if ($curuser && ($curuser->id == $reply->user_id || $curuser->role == 'admin'))
+                                                        <span class="mx-1">·</span>
+                                                        <button onclick="deleteComment({{ $reply->id }}, {{ $item_id }}, '{{ $item_code }}')" class="hover:text-red-500">
+                                                            Xóa
+                                                        </button>
+                                                        <span class="mx-1">·</span>
+                                                        <button onclick="editComment({{ $reply->id }}, '{{ htmlspecialchars($reply->content, ENT_QUOTES) }}', {{ $item_id }}, '{{ $item_code }}')" class="hover:text-blue-500">
+                                                            Sửa
+                                                        </button>
+                                                    @endif
                                                     <span class="mx-1">·</span>
                                                     <button id="comment-like-{{ $reply->id }}" 
                                                             class="comment-like-btn hover:text-gray-700 flex items-center" 
@@ -244,4 +221,16 @@
     
     // Initialize dropdowns when the comments are loaded
     initializeCommentDropdowns();
+
+    // Đảm bảo CSRF token được cập nhật khi có sự kiện liên quan đến token
+    document.addEventListener('DOMContentLoaded', function() {
+        // Theo dõi các sự kiện click trên các nút like comment
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.comment-like-btn')) {
+                console.log('Comment like button clicked');
+                // Đảm bảo CSRF token đã được lưu
+                window.lastCsrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            }
+        });
+    });
 </script>
