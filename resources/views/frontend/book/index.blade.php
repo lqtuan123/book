@@ -1516,6 +1516,9 @@
                         fileType = fileType.replace('video/', 'Video ');
                     }
                     
+                    // Sử dụng download_url nếu có, không thì fallback về url
+                    const downloadUrl = resource.download_url || resource.url;
+                    
                     html += `
                         <li class="p-4 hover:bg-gray-50">
                             <div class="flex items-start space-x-4">
@@ -1539,7 +1542,7 @@
                                             <i class="fas fa-external-link-alt mr-1"></i> Xem trên YouTube
                                         </a>` : 
                                         (resource.is_downloadable !== false ? 
-                                            `<a href="${resource.url}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium" download>
+                                            `<a href="${downloadUrl}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium" download>
                                                 <i class="fas fa-download mr-1"></i> Tải xuống
                                             </a>` :
                                             `<a href="${resource.url}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium">

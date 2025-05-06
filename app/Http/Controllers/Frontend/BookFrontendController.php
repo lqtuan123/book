@@ -959,6 +959,9 @@ class BookFrontendController extends Controller
                     } else {
                         $resource->is_downloadable = true;
                     }
+                    
+                    // Tạo đường dẫn tải xuống
+                    $resource->download_url = \App\Modules\Resource\Models\Resource::createDownloadLink($resource);
                 }
             }
 

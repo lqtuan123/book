@@ -108,6 +108,13 @@ class FileDownloadController extends Controller
                 return response()->download($publicPath, $fileName, ['Content-Type' => $mimeType]);
             }
             
+            // Phương pháp 3.1: Kiểm tra trong storage/uploads/resources
+            $resourcePath = public_path('storage/uploads/resources/' . basename($filePath));
+            if (file_exists($resourcePath)) {
+                \Illuminate\Support\Facades\Log::info("Tải xuống từ resource path: " . $resourcePath);
+                return response()->download($resourcePath, $fileName, ['Content-Type' => $mimeType]);
+            }
+            
             // Phương pháp 4: Thử xử lý như đường dẫn tương đối
             $basePath = base_path(ltrim($filePath, '/'));
             if (file_exists($basePath)) {

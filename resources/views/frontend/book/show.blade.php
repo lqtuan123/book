@@ -1874,7 +1874,9 @@
                 
                 // Tạo URL tải xuống
                 let downloadUrl = '';
-                if (resource.path) {
+                if (resource.download_url) {
+                    downloadUrl = resource.download_url;
+                } else if (resource.path) {
                     downloadUrl = resource.path;
                 } else if (resource.file_path) {
                     downloadUrl = resource.file_path;
