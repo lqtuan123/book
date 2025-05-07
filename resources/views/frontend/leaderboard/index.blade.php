@@ -394,8 +394,8 @@
                                         alt="{{ $topUsers[1]->full_name }}"
                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">
                                     <h3 class="mt-4 text-xl font-bold text-center">{{ $topUsers[1]->full_name }}</h3>
-                                    <p class="text-blue-600 font-medium mt-1">Đọc
-                                        {{ number_format($topUsers[1]->books_read_count ?? 0) }} cuốn</p>
+                                    {{-- <p class="text-blue-600 font-medium mt-1">Đọc
+                                        {{ number_format($topUsers[1]->books_read_count ?? 0) }} cuốn</p> --}}
                                     <div class="mt-3 bg-gray-100 px-4 py-2 rounded-full">
                                         <span
                                             class="text-indigo-700 font-bold">{{ number_format($topUsers[1]->total_points) }}
@@ -464,8 +464,8 @@
                                         alt="{{ $topUsers[0]->full_name }}"
                                         class="w-28 h-28 rounded-full object-cover border-4 border-yellow-400">
                                     <h3 class="mt-4 text-xl font-bold text-center">{{ $topUsers[0]->full_name }}</h3>
-                                    <p class="text-blue-600 font-medium mt-1">Đọc
-                                        {{ number_format($topUsers[0]->books_read_count ?? 0) }} cuốn</p>
+                                    {{-- <p class="text-blue-600 font-medium mt-1">Đọc
+                                        {{ number_format($topUsers[0]->books_read_count ?? 0) }} cuốn</p> --}}
                                     <div class="mt-3 bg-yellow-100 px-4 py-2 rounded-full">
                                         <span
                                             class="text-yellow-700 font-bold">{{ number_format($topUsers[0]->total_points) }}
@@ -529,8 +529,8 @@
                                         alt="{{ $topUsers[2]->full_name }}"
                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">
                                     <h3 class="mt-4 text-xl font-bold text-center">{{ $topUsers[2]->full_name }}</h3>
-                                    <p class="text-blue-600 font-medium mt-1">Đọc
-                                        {{ number_format($topUsers[2]->books_read_count ?? 0) }} cuốn</p>
+                                    {{-- <p class="text-blue-600 font-medium mt-1">Đọc
+                                        {{ number_format($topUsers[2]->books_read_count ?? 0) }} cuốn</p> --}}
                                     <div class="mt-3 bg-amber-100 px-4 py-2 rounded-full">
                                         <span
                                             class="text-amber-700 font-bold">{{ number_format($topUsers[2]->total_points) }}
@@ -602,8 +602,8 @@
                                                 class="w-12 h-12 rounded-full object-cover mr-4">
                                             <div>
                                                 <h3 class="font-medium">{{ $user->full_name }}</h3>
-                                                <p class="text-gray-500 text-sm">Đọc
-                                                    {{ number_format($user->books_read_count ?? 0) }} cuốn</p>
+                                                {{-- <p class="text-gray-500 text-sm">Đọc
+                                                    {{ number_format($user->books_read_count ?? 0) }} cuốn</p> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -621,6 +621,28 @@
                             </div>
                         @endif
                     </div>
+                </div>
+            </div>
+
+            <!-- Hiển thị thêm thông tin hoạt động -->
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-500 mb-2">Hoạt động tích cực:</p>
+                <div class="flex flex-wrap gap-2">
+                    @if(isset($topUsers[0]->activities['book']) && $topUsers[0]->activities['book'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+                            <i class="fas fa-book mr-1"></i> {{ $topUsers[0]->activities['book'] }} sách
+                        </span>
+                    @endif
+                    @if(isset($topUsers[0]->activities['comment']) && $topUsers[0]->activities['comment'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs">
+                            <i class="fas fa-comment mr-1"></i> {{ $topUsers[0]->activities['comment'] }} bình luận
+                        </span>
+                    @endif
+                    @if(isset($topUsers[0]->activities['post']) && $topUsers[0]->activities['post'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-purple-100 text-purple-700 text-xs">
+                            <i class="fas fa-pen mr-1"></i> {{ $topUsers[0]->activities['post'] }} bài viết
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>
@@ -876,6 +898,28 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Hiển thị thêm thông tin hoạt động -->
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-500 mb-2">Hoạt động tích cực:</p>
+                <div class="flex flex-wrap gap-2">
+                    @if(isset($monthlyTopUsers[0]->activities['book']) && $monthlyTopUsers[0]->activities['book'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+                            <i class="fas fa-book mr-1"></i> {{ $monthlyTopUsers[0]->activities['book'] }} sách
+                        </span>
+                    @endif
+                    @if(isset($monthlyTopUsers[0]->activities['comment']) && $monthlyTopUsers[0]->activities['comment'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs">
+                            <i class="fas fa-comment mr-1"></i> {{ $monthlyTopUsers[0]->activities['comment'] }} bình luận
+                        </span>
+                    @endif
+                    @if(isset($monthlyTopUsers[0]->activities['post']) && $monthlyTopUsers[0]->activities['post'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-purple-100 text-purple-700 text-xs">
+                            <i class="fas fa-pen mr-1"></i> {{ $monthlyTopUsers[0]->activities['post'] }} bài viết
+                        </span>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <div class="tab-content hidden" id="weekly-tab">
@@ -1127,6 +1171,28 @@
                             </div>
                         @endif
                     </div>
+                </div>
+            </div>
+
+            <!-- Hiển thị thêm thông tin hoạt động -->
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-500 mb-2">Hoạt động tích cực:</p>
+                <div class="flex flex-wrap gap-2">
+                    @if(isset($weeklyTopUsers[0]->activities['book']) && $weeklyTopUsers[0]->activities['book'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+                            <i class="fas fa-book mr-1"></i> {{ $weeklyTopUsers[0]->activities['book'] }} sách
+                        </span>
+                    @endif
+                    @if(isset($weeklyTopUsers[0]->activities['comment']) && $weeklyTopUsers[0]->activities['comment'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs">
+                            <i class="fas fa-comment mr-1"></i> {{ $weeklyTopUsers[0]->activities['comment'] }} bình luận
+                        </span>
+                    @endif
+                    @if(isset($weeklyTopUsers[0]->activities['post']) && $weeklyTopUsers[0]->activities['post'] > 0)
+                        <span class="px-2 py-1 rounded-full bg-purple-100 text-purple-700 text-xs">
+                            <i class="fas fa-pen mr-1"></i> {{ $weeklyTopUsers[0]->activities['post'] }} bài viết
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>

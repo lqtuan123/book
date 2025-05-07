@@ -1,4 +1,4 @@
-@extends('frontend.layouts.master')
+@extends('frontend.layouts.master1')
 
 @php
 use Illuminate\Support\Str;
@@ -121,10 +121,21 @@ use Illuminate\Support\Facades\Auth;
     /* CSS cho thanh header ẩn/hiện */
     header.hidden-header {
         transform: translateY(-100%);
+        position: fixed;
+        width: 100%;
+        z-index: 40;
     }
     
     header {
         transition: transform 0.3s ease;
+        position: fixed;
+        width: 100%;
+        z-index: 40;
+    }
+
+    /* Đảm bảo nội dung không bị che khuất khi header ẩn */
+    main {
+        padding-top: 70px; /* Chiều cao của header */
     }
 
     /* CSS cho thanh điều khiển PDF nổi cố định ở đáy */

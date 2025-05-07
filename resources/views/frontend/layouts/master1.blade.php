@@ -158,7 +158,7 @@ $user = auth()->user();
 <body class="bg-gray-50 font-sans" data-user-logged-in="{{ Auth::check() ? '1' : '0' }}">
 
     <!-- Header Navbar -->
-    @include('frontend.layouts.header')
+    @include('frontend.layouts.header1')
     
     <!-- Main Content -->
     <main class="py-4">

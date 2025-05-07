@@ -203,6 +203,34 @@ class User extends Authenticatable
     }
 
     /**
+     * Tính lại tổng điểm cho tất cả người dùng
+     * 
+     * @return array
+     */
+    public static function recalculateAllUserPoints()
+    {
+        $results = [
+            'success' => 0,
+            'failed' => 0,
+            'total' => 0
+        ];
+        
+        $users = self::all();
+        $results['total'] = count($users);
+        
+        foreach ($users as $user) {
+            try {
+                $user->recalculateTotalPoints();
+                $results['success']++;
+            } catch (\Exception $e) {
+                $results['failed']++;
+            }
+        }
+        
+        return $results;
+    }
+
+    /**
      * Đếm số thông báo chưa đọc của người dùng
      *
      * @return int

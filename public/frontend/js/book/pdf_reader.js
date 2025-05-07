@@ -75,6 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Trường hợp còn lại ít hơn pagesPerView trang
                 currentPage = Math.max(1, pdf.numPages - pagesPerView + 1);
                 queueRenderPages(currentPage);
+            } else {
+                // Khi đã ở trang cuối, quay lại trang đầu tiên
+                currentPage = 1;
+                queueRenderPages(currentPage);
             }
         };
 
@@ -170,6 +174,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Xóa nội dung hiện tại
         pdfContent.innerHTML = '';
 
+        // Cuộn lên đầu trang khi chuyển trang với hiệu ứng mượt mà
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
         // Số trang cần hiển thị (không vượt quá tổng số trang)
         const pagesToRender = Math.min(pagesPerView, currentPdf.numPages - startPage + 1);
 
@@ -185,6 +195,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pageContainer = document.createElement('div');
                 pageContainer.className = 'pdf-page page-transition';
                 pageContainer.setAttribute('data-page-number', pageNumber);
+                pageContainer.style.opacity = '0';
+                pageContainer.style.transition = 'opacity 0.3s ease';
 
                 // Thêm placeholder hiển thị số trang
                 const pageNumberElem = document.createElement('div');
@@ -205,7 +217,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     renderSinglePage(pageNumber, pageContainer)
                         .then(() => {
                             renderedCount++;
-                            // Cập nhật tiến độ loading (có thể thêm nếu cần)
+                            // Hiển thị trang với hiệu ứng fade in
+                            requestAnimationFrame(() => {
+                                pageContainer.style.opacity = '1';
+                            });
                         })
                         .catch(error => {
                             console.error(`Lỗi khi render trang ${pageNumber}:`, error);
@@ -226,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             console.error('Lỗi khi render các trang:', error);
             loadingIndicator.innerHTML = `<p class="text-danger">Lỗi khi render trang: ${error.message}</p>`;
-            loadingIndicator.style.display = 'block'; // Đảm bảo hiển thị thông báo lỗi
+            loadingIndicator.style.display = 'block';
         } finally {
             // Luôn đánh dấu render hoàn tất kể cả có lỗi
             isRendering = false;
@@ -235,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (pageNumPending !== null) {
                 const pendingPage = pageNumPending;
                 pageNumPending = null;
-                setTimeout(() => renderPages(pendingPage), 100); // Thêm timeout để tránh đệ quy vô hạn
+                setTimeout(() => renderPages(pendingPage), 100);
             }
         }
     }
