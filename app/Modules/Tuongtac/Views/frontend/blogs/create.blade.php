@@ -205,7 +205,7 @@
     </style>
 @endsection
 @section('inner-content')
-    <div class="container" style="max-width: 692.8px;">
+    <div  >
         <div class="back-button">
             <a href="{{ url()->previous() }}" class="btn-secondary">
                 ← Quay lại
@@ -272,7 +272,7 @@
 
             <input type='hidden' value='{{ isset($page_id) ? $page_id : 0 }}' name="page_id" />
             <!-- Thêm input hidden cho group_id -->
-            <input type='hidden' value='{{ request()->get('group_id') ? request()->get('group_id') : 0 }}'
+            <input type='hidden' value='{{ isset($group_id) ? $group_id : (request()->get('group_id') ? request()->get('group_id') : 0) }}'
                 name="group_id" />
 
             <!-- Thêm trường trạng thái -->

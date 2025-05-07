@@ -144,7 +144,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div">
         <div class="row mb-4">
             <div class="col-md-8">
                 <h1 class="h3 mb-2">Danh sách nhóm</h1>

@@ -323,7 +323,22 @@ if (!isset($post->likes_count)) {
                     @php
                         $resourceIds = is_array($post->resources) ? $post->resources : json_decode($post->resources, true);
                         if (is_array($resourceIds) && !empty($resourceIds)) {
-                            $resources = \App\Modules\Resource\Models\Resource::whereIn('id', $resourceIds)->get();
+                            // Đảm bảo $resourceIds là mảng phẳng (không lồng nhau) trước khi truyền vào whereIn
+                            $flatResourceIds = [];
+                            foreach ($resourceIds as $id) {
+                                if (is_array($id)) {
+                                    // Nếu là mảng lồng nhau, thêm từng phần tử vào mảng phẳng
+                                    foreach ($id as $subId) {
+                                        if (is_numeric($subId)) {
+                                            $flatResourceIds[] = $subId;
+                                        }
+                                    }
+                                } elseif (is_numeric($id)) {
+                                    // Nếu là giá trị số, thêm trực tiếp vào mảng phẳng
+                                    $flatResourceIds[] = $id;
+                                }
+                            }
+                            $resources = \App\Modules\Resource\Models\Resource::whereIn('id', $flatResourceIds)->get();
                         } else {
                             $resources = collect([]);
                         }

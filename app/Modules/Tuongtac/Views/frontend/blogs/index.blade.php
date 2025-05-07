@@ -22,6 +22,7 @@ $adsense_code = '<ins class="adsbygoogle"
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
 
     <style>
+        /* Biến cho toàn bộ giao diện */
         :root {
             --primary-color: #3b82f6;
             --primary-hover: #2563eb;
@@ -39,27 +40,28 @@ $adsense_code = '<ins class="adsbygoogle"
             --radius-full: 9999px;
         }
 
-        body {
-            color: var(--text-dark);
-            background-color: #f5f7fa;
+        /* Post Card */
+        .blog-post-card {
+            background-color: var(--bg-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
         }
 
-        .container {
-            max-width: 692.8px;
-            margin: 0 auto;
+        .blog-post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
-        #main-content {
-            width: 100%;
-        }
-
-        /* Search and Create Post section */
+        /* Search Bar */
         .search-container {
             display: flex;
             align-items: center;
-            width: 100%;
-            margin-bottom: 8px;
             gap: 12px;
+            width: 100%;
+            margin-bottom: 16px;
         }
 
         .search-form {
@@ -67,13 +69,12 @@ $adsense_code = '<ins class="adsbygoogle"
         }
 
         .search-input-container {
-            position: relative;
             display: flex;
             align-items: center;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-full);
             background-color: var(--bg-white);
-            padding: 0 8px;
+            padding: 0 12px;
             width: 100%;
             box-shadow: var(--shadow-sm);
             transition: all 0.2s ease;
@@ -85,8 +86,8 @@ $adsense_code = '<ins class="adsbygoogle"
         }
 
         .search-input {
-            background: transparent;
             border: none;
+            background: transparent;
             width: 100%;
             padding: 10px 12px;
             font-size: 14px;
@@ -110,6 +111,7 @@ $adsense_code = '<ins class="adsbygoogle"
             background-color: var(--primary-hover);
         }
 
+        /* Create Post Button */
         .create-post-button {
             display: flex;
             align-items: center;
@@ -133,52 +135,8 @@ $adsense_code = '<ins class="adsbygoogle"
             box-shadow: var(--shadow-md);
         }
 
-        /* Dropzone styling */
-        .dropzone {
-            border: 2px dashed #0087F7;
-            border-radius: var(--radius-md);
-            background: white;
-            min-height: 150px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .dropzone .dz-message {
-            font-weight: 400;
-            font-size: 16px;
-            color: var(--text-lighter);
-            text-align: center;
-            margin: 2em 0;
-        }
-
-        .dropzone .dz-preview .dz-error-message {
-            font-size: 12px;
-        }
-
-        .upload-status {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: var(--radius-md);
-            text-align: center;
-        }
-
-        /* Post card styling */
-        .post-card {
-            margin-bottom: 20px;
-            transition: all 0.25s ease;
-            border-radius: var(--radius-lg);
-            background-color: var(--bg-white);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-
-        .post-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .post-card-header {
+        /* Post Header */
+        .post-header {
             display: flex;
             align-items: flex-start;
             margin-bottom: 12px;
@@ -194,6 +152,21 @@ $adsense_code = '<ins class="adsbygoogle"
             box-shadow: var(--shadow-sm);
         }
 
+        .post-meta {
+            flex: 1;
+        }
+
+        .post-author {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--text-lighter);
+        }
+
+        /* Post Content */
         .post-title {
             font-size: 18px;
             font-weight: 600;
@@ -214,24 +187,6 @@ $adsense_code = '<ins class="adsbygoogle"
             margin-bottom: 12px;
         }
 
-        .post-tag {
-            display: inline-block;
-            background-color: #e9f5fe;
-            color: var(--primary-color);
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: var(--radius-full);
-            margin-right: 8px;
-            margin-bottom: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .post-tag:hover {
-            background-color: #d1e9fd;
-            text-decoration: none;
-        }
-
         .post-image {
             width: 100%;
             height: auto;
@@ -240,21 +195,55 @@ $adsense_code = '<ins class="adsbygoogle"
             margin-bottom: 12px;
         }
 
+        /* Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+
+        .post-tag {
+            display: inline-block;
+            background-color: #e9f5fe;
+            color: var(--primary-color);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            transition: background-color 0.2s;
+        }
+
+        .post-tag:hover {
+            background-color: #d1e9fd;
+            text-decoration: none;
+        }
+
+        /* Post Stats */
         .post-stats {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
+            font-size: 13px;
+            color: var(--text-lighter);
             border-top: 1px solid var(--border-light);
             border-bottom: 1px solid var(--border-light);
             margin-bottom: 12px;
-            font-size: 13px;
-            color: var(--text-lighter);
         }
 
+        .stat-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-item i {
+            margin-right: 4px;
+        }
+
+        /* Post Actions */
         .post-actions {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
         }
 
         .post-action-btn {
@@ -279,10 +268,12 @@ $adsense_code = '<ins class="adsbygoogle"
             margin-right: 6px;
         }
 
-        .post-action-btn.liked {
+        .post-action-btn.active,
+        .like-button.text-blue-600 {
             color: var(--primary-color);
         }
 
+        /* Comment Section */
         .comment-input-container {
             display: flex;
             align-items: center;
@@ -299,24 +290,36 @@ $adsense_code = '<ins class="adsbygoogle"
             outline: none;
         }
 
-        .post-action-icon {
+        .comment-action {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            color: var(--text-light);
-            background-color: var(--bg-white);
-            box-shadow: var(--shadow-sm);
-            margin-left: 2px;
-            cursor: pointer;
-            transition: all 0.2s;
+            gap: 8px;
         }
 
-        .post-action-icon:hover {
-            background-color: var(--primary-color);
-            color: white;
+        .comment-action button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-lighter);
+            transition: color 0.2s;
+        }
+
+        .comment-action button:hover {
+            color: var(--primary-color);
+        }
+
+        /* Loading and Load More */
+        .loading-spinner {
+            display: none;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .loading-spinner.active {
+            display: flex;
         }
 
         .load-more-btn {
@@ -338,6 +341,61 @@ $adsense_code = '<ins class="adsbygoogle"
             box-shadow: var(--shadow-md);
         }
 
+        /* Dropzone styling */
+        .dropzone {
+            border: 2px dashed #0087F7;
+            border-radius: var(--radius-md);
+            background: white;
+            min-height: 150px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dropzone .dz-message {
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--text-lighter);
+            text-align: center;
+            margin: 2em 0;
+        }
+
+        /* Modal */
+        .blog-modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blog-modal.hidden {
+            display: none;
+        }
+
+        .blog-modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .blog-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .blog-modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Media Queries */
         @media (max-width: 768px) {
             .search-container {
                 flex-direction: column;
@@ -345,7 +403,6 @@ $adsense_code = '<ins class="adsbygoogle"
 
             .search-form {
                 width: 100%;
-                margin-right: 0;
                 margin-bottom: 10px;
             }
 
@@ -353,278 +410,246 @@ $adsense_code = '<ins class="adsbygoogle"
                 width: 100%;
             }
         }
-
-        @media (min-width: 1024px) {
-            .lg\:flex-row {
-                padding-right: 0.9rem !important;
-                padding-left: 0.9rem !important;
-            }
-
-            /* Căn chỉnh rightSidebar */
-            .right-sidebar {
-                padding-right: 0.9rem !important;
-            }
-
-            /* Căn chỉnh container chứa nội dung chính */
-            .main-container {
-                padding-left: 0.9rem !important;
-                padding-right: 0.9rem !important;
-                max-width: 100%;
-            }
-        }
     </style>
 @endsection
+
 @section('inner-content')
-    <div class="container" style="max-width: 692.8px;">
-
-        <!-- Search and Create Post -->
-        <div class="post-card p-4 mb-4">
-            <div class="search-container">
-                <div class="search-form">
-                    <form action="{{ route('front.tblogs.index') }}" method="GET" class="search-input-container">
-                        <i class="fas fa-search text-gray-400" style="color: #9ca3af;"></i>
-                        <input type="text" name="search" placeholder="Tìm kiếm bài viết..."
-                            value="{{ request('search') }}" class="search-input">
-                        <button type="submit" class="search-button">Tìm</button>
-                    </form>
-                </div>
-
-                <a href="javascript:void(0);" onclick="openCreatePostModal()" class="create-post-button">
-                    <i class="fas fa-plus mr-2"></i> Tạo bài viết mới
-                </a>
+    <!-- Search and Create Post -->
+    <div class="blog-post-card">
+        <div class="search-container">
+            <div class="search-form">
+                <form action="{{ route('front.tblogs.index') }}" method="GET" class="search-input-container">
+                    <i class="fas fa-search" style="color: #9ca3af;"></i>
+                    <input type="text" name="search" placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}"
+                        class="search-input">
+                    <button type="submit" class="search-button">Tìm</button>
+                </form>
             </div>
+
+            <a href="javascript:void(0);" onclick="openCreatePostModal()" class="create-post-button">
+                <i class="fas fa-plus mr-2"></i> Tạo bài viết mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Post Feed -->
+    <section>
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="loading-spinner">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
 
         <!-- Post Feed -->
-        <section class="mb-8">
-            <!-- Loading Spinner -->
-            <div id="loading-spinner" class="loading-spinner flex justify-center my-8" style="display: none;">
-                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
+        <div id="post-feed">
+            <?php $vitri = 0; ?>
 
-            <!-- Post Feed -->
-            <div id="post-feed" class="space-y-6">
-                <?php $vitri = 0; ?>
+            @foreach ($posts as $post)
+                <?php
+                $images = json_decode($post->photo, true);
+                if (!$images) {
+                    $thumbnail_url = 'https://itcctv.vn/images/profile-8.jpg';
+                } else {
+                    $thumbnail_url = $images[0];
+                }
+                
+                $createdAt = Carbon::parse($post->created_at);
+                $diffInMinutes = $createdAt->diffInMinutes();
+                $diffInHours = $createdAt->diffInHours();
+                $diffInDays = $createdAt->diffInDays();
+                $thoigian = '';
+                
+                if ($diffInMinutes < 60) {
+                    $thoigian = round($diffInMinutes) . ' phút trước';
+                } elseif ($diffInHours < 24) {
+                    $thoigian = round($diffInHours) . ' tiếng trước';
+                } else {
+                    $thoigian = round($diffInDays) . ' ngày trước';
+                }
+                
+                $vitri++;
+                if ($vitri % 6 == 0) {
+                    echo '<div class="blog-post-card">' . $adsense_code . '</div>';
+                }
+                ?>
 
-                @foreach ($posts as $post)
-                    <?php
-                    $images = json_decode($post->photo, true);
-                    if (!$images) {
-                        $thumbnail_url = 'https://itcctv.vn/images/profile-8.jpg';
-                    } else {
-                        $thumbnail_url = $images[0];
-                    }
-                    
-                    $createdAt = Carbon::parse($post->created_at);
-                    $diffInMinutes = $createdAt->diffInMinutes();
-                    $diffInHours = $createdAt->diffInHours();
-                    $diffInDays = $createdAt->diffInDays();
-                    $thoigian = '';
-                    
-                    if ($diffInMinutes < 60) {
-                        $thoigian = round($diffInMinutes) . ' phút trước';
-                    } elseif ($diffInHours < 24) {
-                        $thoigian = round($diffInHours) . ' tiếng trước';
-                    } else {
-                        $thoigian = round($diffInDays) . ' ngày trước';
-                    }
-                    
-                    $vitri++;
-                    if ($vitri % 6 == 0) {
-                        echo '<div class="post-card p-4">' . $adsense_code . '</div>';
-                    }
-                    ?>
-
-                    <div class="post-card p-4 relative {{ $post->status == 0 ? 'bg-gray-50' : '' }}">
-                        <!-- Action buttons -->
-                        <div class="absolute top-3 right-3 z-10 flex space-x-2">
-                            @if (\Auth::id() == ($post->author ? $post->author->id : null) || (auth()->id() && auth()->user()->role == 'admin'))
-                                <form action="{{ route('front.tblogs.destroy', $post->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                        title="Xóa bài viết"
-                                        onclick="return confirm('Bạn có chắc muốn xóa bài viết này?');">
-                                        <i class="fas fa-trash-alt text-gray-600 text-sm"></i>
-                                    </button>
-                                </form>
-
-                                <a href="javascript:void(0);" onclick="openEditPostModal({{ $post->id }})"
+                <div class="blog-post-card relative {{ $post->status == 0 ? 'bg-gray-50' : '' }}">
+                    <!-- Action buttons -->
+                    <div class="absolute top-3 right-3 z-10 flex space-x-2">
+                        @if (\Auth::id() == ($post->author ? $post->author->id : null) || (auth()->id() && auth()->user()->role == 'admin'))
+                            <form action="{{ route('front.tblogs.destroy', $post->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
                                     class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                    title="Chỉnh sửa">
-                                    <i class="fas fa-pencil-alt text-gray-600 text-sm"></i>
-                                </a>
+                                    title="Xóa bài viết" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?');">
+                                    <i class="fas fa-trash-alt text-gray-600 text-sm"></i>
+                                </button>
+                            </form>
 
-                                @if ($post->status == 1)
-                                    <a href="{{ route('front.tblogs.status', $post->id) }}"
-                                        class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                        title="Ẩn bài viết">
-                                        <i class="fas fa-eye-slash text-gray-600 text-sm"></i>
-                                    </a>
-                                @else
-                                    <a href="{{ route('front.tblogs.status', $post->id) }}"
-                                        class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                        title="Hiện bài viết">
-                                        <i class="fas fa-eye text-gray-600 text-sm"></i>
-                                    </a>
-                                @endif
-                            @endif
-                        </div>
-
-                        <div class="post-card-header">
-                            <a href="{{ route('front.user.profile', ['id' => $post->author ? $post->author->id : 0]) }}">
-                                <img src="{{ $post->author ? $post->author->photo : '/images/default-avatar.png' }}"
-                                    alt="Avatar" class="avatar-img">
+                            <a href="javascript:void(0);" onclick="openEditPostModal({{ $post->id }})"
+                                class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                title="Chỉnh sửa">
+                                <i class="fas fa-pencil-alt text-gray-600 text-sm"></i>
                             </a>
-                            <div>
-                                <h3 class="font-medium text-gray-800">
-                                    <a href="{{ route('front.user.profile', ['id' => $post->author ? $post->author->id : 0]) }}"
-                                        class="hover:text-blue-600">
-                                        {{ $post->author ? $post->author->full_name : 'Người dùng không xác định' }}
-                                    </a>
-                                </h3>
-                                <p class="text-xs text-gray-500">{{ $thoigian }} ·
-                                    <i class="fas fa-{{ $post->status == 1 ? 'globe-americas' : 'lock' }} text-xs"></i>
-                                </p>
-                                @if (isset($post->group_name) && isset($post->group_url))
-                                    <p class="text-xs text-blue-500 mt-1">
-                                        <i class="fas fa-users mr-1"></i>
-                                        <a href="{{ $post->group_url }}" class="hover:underline">
-                                            {{ $post->group_name }}
-                                        </a>
-                                    </p>
-                                @endif
-                            </div>
-                        </div>
 
-                        <div class="mb-4">
-                            <h2 class="post-title">
-                                <a href="{{ route('front.tblogs.show', $post->slug) }}">
-                                    {{ $post->title }}
+                            @if ($post->status == 1)
+                                <a href="{{ route('front.tblogs.status', $post->id) }}"
+                                    class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                    title="Ẩn bài viết">
+                                    <i class="fas fa-eye-slash text-gray-600 text-sm"></i>
                                 </a>
-                            </h2>
+                            @else
+                                <a href="{{ route('front.tblogs.status', $post->id) }}"
+                                    class="w-7 h-7 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                    title="Hiện bài viết">
+                                    <i class="fas fa-eye text-gray-600 text-sm"></i>
+                                </a>
+                            @endif
+                        @endif
+                    </div>
 
-                            <p class="post-summary">
-                                {{ Str::limit(strip_tags($post->content), 150) }}
+                    <div class="post-header">
+                        <a href="{{ route('front.user.profile', ['id' => $post->author ? $post->author->id : 0]) }}">
+                            <img src="{{ $post->author ? $post->author->photo : '/images/default-avatar.png' }}"
+                                alt="Avatar" class="avatar-img">
+                        </a>
+                        <div class="post-meta">
+                            <h3 class="post-author">
+                                <a href="{{ route('front.user.profile', ['id' => $post->author ? $post->author->id : 0]) }}"
+                                    class="hover:text-blue-600">
+                                    {{ $post->author ? $post->author->full_name : 'Người dùng không xác định' }}
+                                </a>
+                            </h3>
+                            <p class="post-time">{{ $thoigian }} ·
+                                <i class="fas fa-{{ $post->status == 1 ? 'globe-americas' : 'lock' }}"></i>
                             </p>
-
-                            @if (count($post->tags) > 0)
-                                <div class="flex flex-wrap mb-3">
-                                    @foreach ($post->tags as $tag)
-                                        <a href="{{ route('front.tblogs.tag', $tag->slug) }}" class="post-tag">
-                                            #{{ $tag->title }}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            @if ($images)
-                                <img src="{{ $thumbnail_url }}" alt="{{ $post->title }}" class="post-image">
+                            @if (isset($post->group_name) && isset($post->group_url))
+                                <p class="text-xs text-blue-500 mt-1">
+                                    <i class="fas fa-users mr-1"></i>
+                                    <a href="{{ $post->group_url }}" class="hover:underline">
+                                        {{ $post->group_name }}
+                                    </a>
+                                </p>
                             @endif
                         </div>
+                    </div>
 
-                        <div class="post-stats">
-                            <div class="flex items-center">
-                                <div class="flex items-center">
-                                    <i class="fas fa-thumbs-up text-blue-500 mr-1"></i>
-                                    <span class="text-xs"
-                                        id="like-count-{{ $post->id }}">{{ $post->likes_count ?? 0 }}</span>
-                                </div>
-                                <div class="flex items-center ml-4">
-                                    <i class="fas fa-comment text-gray-400 mr-1"></i>
-                                    <span class="text-xs">{{ $post->comment_count ?? 0 }}</span>
-                                </div>
+                    <div class="mb-4">
+                        <h2 class="post-title">
+                            <a href="{{ route('front.tblogs.show', $post->slug) }}">
+                                {{ $post->title }}
+                            </a>
+                        </h2>
+
+                        <p class="post-summary">
+                            {{ Str::limit(strip_tags($post->content), 150) }}
+                        </p>
+
+                        @if (count($post->tags) > 0)
+                            <div class="tags-container">
+                                @foreach ($post->tags as $tag)
+                                    <a href="{{ route('front.tblogs.tag', $tag->slug) }}" class="post-tag">
+                                        #{{ $tag->title }}
+                                    </a>
+                                @endforeach
                             </div>
-                            <div class="text-xs">{{ $post->share_count ?? 0 }} lượt chia sẻ</div>
-                        </div>
+                        @endif
 
-                        <!-- Nút tương tác -->
-                        <div class="flex justify-between border-t border-gray-100 pt-4">
-                            <button id="like-btn-{{ $post->id }}"
-                                class="like-button flex items-center justify-center w-1/4 py-1 text-gray-500 hover:bg-gray-100 rounded {{ isset($post->user_has_liked) && $post->user_has_liked ? 'text-blue-600' : '' }}"
-                                data-item-id="{{ $post->id }}" data-item-code="tblog">
-                                <i
-                                    class="{{ isset($post->user_has_liked) && $post->user_has_liked ? 'fas' : 'far' }} fa-thumbs-up mr-2"></i>
-                                Thích
-                            </button>
-                            <button onclick="toggleCommentBox({{ $post->id }}, 'tblog')"
-                                class="flex items-center justify-center w-1/4 py-1 text-gray-500 hover:bg-gray-100 rounded">
-                                <i class="far fa-comment mr-2"></i> Bình luận
-                            </button>
-                            <button onclick="sharePost({{ $post->id }}, '{{ $post->slug }}', 'tblog')"
-                                class="flex items-center justify-center w-1/4 py-1 text-gray-500 hover:bg-gray-100 rounded">
-                                <i class="fas fa-share mr-2"></i> Chia sẻ
-                            </button>
-                            <button id="bookmark-btn-{{ $post->id }}"
-                                onclick="toggleBookmark({{ $post->id }}, 'tblog')"
-                                class="flex items-center justify-center w-1/4 py-1 text-gray-500 hover:bg-gray-100 rounded {{ isset($post->is_bookmarked) && $post->is_bookmarked ? 'text-red-500' : '' }}">
-                                <i
-                                    class="{{ isset($post->is_bookmarked) && $post->is_bookmarked ? 'fas' : 'far' }} fa-heart mr-2"></i>
-                                Yêu thích
-                            </button>
-                        </div>
+                        @if ($images)
+                            <img src="{{ $thumbnail_url }}" alt="{{ $post->title }}" class="post-image">
+                        @endif
+                    </div>
 
-                        <div class="comment-input-container">
-                            <img src="{{ auth()->user()->photo ?? 'https://randomuser.me/api/portraits/women/44.jpg' }}"
-                                alt="User" class="w-8 h-8 rounded-full object-cover mr-2">
-                            <div class="relative flex-1">
-                                <input type="text" id="comment-input-{{ $post->id }}" style="width: 100%;"
-                                    placeholder="Viết bình luận..." class="comment-input">
-                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex space-x-1">
-                                    <button class="text-gray-400 hover:text-gray-600 emoji-trigger"
-                                        onclick="addEmoji({{ $post->id }}, event, 'tblog')"
-                                        data-item-id="{{ $post->id }}">
-                                        <i class="far fa-smile"></i>
-                                    </button>
-                                    <button class="text-gray-400 hover:text-gray-600"
-                                        onclick="submitComment({{ $post->id }}, 'tblog')">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </div>
+                    <div class="post-stats">
+                        <div class="flex items-center">
+                            <div class="stat-item">
+                                <i class="fas fa-thumbs-up text-blue-500"></i>
+                                <span id="like-count-{{ $post->id }}">{{ $post->likes_count ?? 0 }}</span>
+                            </div>
+                            <div class="stat-item ml-4">
+                                <i class="fas fa-comment text-gray-400"></i>
+                                <span>{{ $post->comment_count ?? 0 }}</span>
                             </div>
                         </div>
+                        <div class="text-xs">{{ $post->share_count ?? 0 }} lượt chia sẻ</div>
+                    </div>
 
-                        <!-- Comment Box -->
-                        <div id="comment-box-{{ $post->id }}"
-                            class="comment-box bg-white rounded-lg shadow-sm p-4 mt-3" style="display: none;">
-                            <div id="comments-container-{{ $post->id }}" class="space-y-3">
-                                <!-- Comments will be loaded here dynamically -->
-                                <div class="text-center text-gray-500 text-sm py-2">
-                                    <i class="fas fa-spinner fa-spin mr-2"></i> Đang tải bình luận...
-                                </div>
+                    <!-- Nút tương tác -->
+                    <div class="post-actions">
+                        <button id="like-btn-{{ $post->id }}"
+                            class="like-button post-action-btn {{ isset($post->user_has_liked) && $post->user_has_liked ? 'text-blue-600' : '' }}"
+                            data-item-id="{{ $post->id }}" data-item-code="tblog">
+                            <i
+                                class="{{ isset($post->user_has_liked) && $post->user_has_liked ? 'fas' : 'far' }} fa-thumbs-up"></i>
+                            Thích
+                        </button>
+                        <button onclick="toggleCommentBox({{ $post->id }}, 'tblog')" class="post-action-btn">
+                            <i class="far fa-comment"></i> Bình luận
+                        </button>
+                        <button onclick="sharePost({{ $post->id }}, '{{ $post->slug }}', 'tblog')"
+                            class="post-action-btn">
+                            <i class="fas fa-share"></i> Chia sẻ
+                        </button>
+                        <button id="bookmark-btn-{{ $post->id }}"
+                            onclick="toggleBookmark({{ $post->id }}, 'tblog')"
+                            class="post-action-btn {{ isset($post->is_bookmarked) && $post->is_bookmarked ? 'text-red-500' : '' }}">
+                            <i
+                                class="{{ isset($post->is_bookmarked) && $post->is_bookmarked ? 'fas' : 'far' }} fa-heart"></i>
+                            Yêu thích
+                        </button>
+                    </div>
+
+                    <div class="comment-input-container">
+                        <img src="{{ auth()->user()->photo ?? 'https://randomuser.me/api/portraits/women/44.jpg' }}"
+                            alt="User" class="w-8 h-8 rounded-full object-cover mr-2">
+                        <div class="relative flex-1">
+                            <input type="text" id="comment-input-{{ $post->id }}" style="width: 100%;"
+                                placeholder="Viết bình luận..." class="comment-input">
+                            <div class="comment-action">
+                                <button class="emoji-trigger" onclick="addEmoji({{ $post->id }}, event, 'tblog')"
+                                    data-item-id="{{ $post->id }}">
+                                    <i class="far fa-smile"></i>
+                                </button>
+                                <button onclick="submitComment({{ $post->id }}, 'tblog')">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                @endforeach
 
-                <!-- Pagination -->
-                <div class="mt-8 flex justify-center">
-                    {{-- {{$posts->links('vendor.pagination.simple_itcctv')}} --}}
+                    <!-- Comment Box -->
+                    <div id="comment-box-{{ $post->id }}" class="mt-3 bg-white rounded-lg p-4"
+                        style="display: none;">
+                        <div id="comments-container-{{ $post->id }}">
+                            <div class="text-center text-gray-500 text-sm py-2">
+                                <i class="fas fa-spinner fa-spin mr-2"></i> Đang tải bình luận...
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            @endforeach
 
             <!-- Load More Button -->
             @if (isset($posts) && count($posts) >= 10)
-                <div class="mt-8 text-center">
+                <div class="text-center mt-6">
                     <button id="load-more" class="load-more-btn">
                         <i class="fas fa-sync-alt mr-2"></i> Tải thêm bài viết
                     </button>
                 </div>
             @endif
-        </section>
-    </div>
+        </div>
+    </section>
 
     <!-- Thêm modal popup cho chỉnh sửa bài viết -->
-    <div id="editPostModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center p-4 border-b">
+    <div id="editPostModal" class="blog-modal hidden">
+        <div class="blog-modal-content">
+            <div class="blog-modal-header">
                 <h2 class="text-xl font-bold">Chỉnh sửa bài viết</h2>
                 <button onclick="closeEditPostModal()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div id="editPostContent" class="p-6">
+            <div id="editPostContent" class="blog-modal-body">
                 <div class="flex justify-center">
                     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
@@ -633,27 +658,21 @@ $adsense_code = '<ins class="adsbygoogle"
     </div>
 
     <!-- Modal tạo bài viết mới -->
-    <div id="createPostModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center p-4 border-b">
+    <div id="createPostModal" class="blog-modal hidden">
+        <div class="blog-modal-content">
+            <div class="blog-modal-header">
                 <h2 class="text-xl font-bold">Tạo bài viết mới</h2>
                 <button onclick="closeCreatePostModal()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div id="createPostContent" class="p-6">
+            <div id="createPostContent" class="blog-modal-body">
                 <div class="flex justify-center">
                     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Scroll to Top Button -->
-    <button id="scroll-to-top"
-        class="fixed bottom-6 right-6 bg-blue-500 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 invisible transition">
-        <i class="fas fa-arrow-up"></i>
-    </button>
 @endsection
 
 @section('botscript')
@@ -779,11 +798,11 @@ $adsense_code = '<ins class="adsbygoogle"
                     imagesHTML = `
                 <div class="flex flex-wrap mt-2 image-previews">
                     ${images.map((photo, index) => photo ? `
-                        <div class="image-preview mr-2 mb-2 relative">
-                            <img class="rounded-md" style="width:80px; height:80px; object-fit: cover;" src="${photo}">
-                            <button type="button" class="delete-image-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center cursor-pointer hover:bg-red-600" data-photo="${photo}" data-index="${index}">×</button>
-                        </div>
-                        ` : '').join('')}
+                            <div class="image-preview mr-2 mb-2 relative">
+                                <img class="rounded-md" style="width:80px; height:80px; object-fit: cover;" src="${photo}">
+                                <button type="button" class="delete-image-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center cursor-pointer hover:bg-red-600" data-photo="${photo}" data-index="${index}">×</button>
+                            </div>
+                            ` : '').join('')}
                 </div>`;
                 }
             } catch (e) {
@@ -842,10 +861,10 @@ $adsense_code = '<ins class="adsbygoogle"
                         <input type="file" name="document[]" id="edit-document" class="w-full px-3 py-2 border border-gray-300 rounded-md" multiple>
                         
                         ${data.post.documents && data.post.documents.length > 0 ? `
-                            <div class="mt-3">
-                                <p class="text-sm font-medium text-gray-700 mb-2">Tài liệu hiện tại:</p>
-                                <div class="space-y-2">
-                                    ${data.post.documents.map((doc, index) => `
+                                <div class="mt-3">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Tài liệu hiện tại:</p>
+                                    <div class="space-y-2">
+                                        ${data.post.documents.map((doc, index) => `
                                 <div class="flex items-center justify-between bg-gray-50 p-2 rounded">
                                     <div class="flex items-center flex-grow">
                                         <i class="fas fa-file-alt text-blue-500 mr-2"></i>
@@ -859,22 +878,22 @@ $adsense_code = '<ins class="adsbygoogle"
                                     </button>
                                 </div>
                                 `).join('')}
+                                    </div>
                                 </div>
-                            </div>
-                            ` : ''}
+                                ` : ''}
                         
                         <div class="mt-3">
                             <label class="block text-gray-700 mb-2">URL tài liệu</label>
                             <div id="url-fields">
                                 ${data.post.urls && data.post.urls.length > 0 ? 
                                     data.post.urls.map((url, index) => `
-                                        <div class="flex items-center mb-2 url-field">
-                                            <input type="text" name="urls[]" value="${url}" class="flex-grow px-3 py-2 border border-gray-300 rounded-md">
-                                            <button type="button" class="ml-2 text-red-500 hover:text-red-700 remove-url">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                        `).join('') 
+                                            <div class="flex items-center mb-2 url-field">
+                                                <input type="text" name="urls[]" value="${url}" class="flex-grow px-3 py-2 border border-gray-300 rounded-md">
+                                                <button type="button" class="ml-2 text-red-500 hover:text-red-700 remove-url">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                            `).join('') 
                                     : 
                                     `<input type="text" name="urls[]" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="URL file (nếu có)">`
                                 }
@@ -991,7 +1010,7 @@ $adsense_code = '<ins class="adsbygoogle"
                             if (index !== -1) {
                                 uploadedimages.splice(index, 1);
                                 document.getElementById('uploadedimages').value = JSON.stringify(
-                                uploadedimages);
+                                    uploadedimages);
                             }
                         }
                     } catch (e) {
@@ -1279,9 +1298,9 @@ $adsense_code = '<ins class="adsbygoogle"
                     <div class="flex flex-wrap gap-2 mt-2">
                         ${data.toptags.map(tag => 
                             `<button type="button" class="tag-button bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs hover:bg-blue-200" 
-                                        data-tag-id="${tag.id}" data-tag-name="${tag.title}">
-                                        #${tag.title}
-                                    </button>`
+                                            data-tag-id="${tag.id}" data-tag-name="${tag.title}">
+                                            #${tag.title}
+                                        </button>`
                         ).join('')}
                     </div>
                 </div>

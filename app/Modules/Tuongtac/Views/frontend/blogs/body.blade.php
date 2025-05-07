@@ -6,6 +6,87 @@
     <!-- Dropzone CSS -->
     @yield('topcss')
     <style>
+        /* CSS cho cấu trúc 3 cột cố định */
+        .blogs-container {
+            display: flex;
+            position: relative;
+            width: 100%;
+            min-height: calc(100vh - 60px); /* Điều chỉnh theo chiều cao thực tế của navbar */
+            overflow: visible; /* Thay đổi từ hidden thành visible */
+        }
+
+        /* Cột trái */
+        .left-sidebar {
+            width: 280px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: hidden; /* Ban đầu ẩn thanh cuộn */
+            padding: 1rem 1rem 1rem 0;
+            border-right: 1px solid #e5e7eb;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 225, 0.6) transparent;
+            transition: overflow-y 0.3s ease;
+        }
+        
+        .left-sidebar:hover {
+            overflow-y: auto; /* Hiển thị thanh cuộn khi hover */
+        }
+
+        /* Phần nội dung chính giữa */
+        .main-content-wrapper {
+            flex: 1;
+            min-width: 0; /* Đảm bảo co lại khi màn hình nhỏ */
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 1rem 0;
+            /* Bỏ các thuộc tính cuộn riêng */
+            overflow: visible;
+            position: relative;
+        }
+
+        /* Cột phải */
+        .right-sidebar {
+            width: 320px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: hidden; /* Ban đầu ẩn thanh cuộn */
+            padding: 1rem 0rem 1rem 1rem !important;
+            border-left: 1px solid #e5e7eb;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 225, 0.6) transparent;
+            transition: overflow-y 0.3s ease;
+        }
+        
+        .right-sidebar:hover {
+            overflow-y: auto; /* Hiển thị thanh cuộn khi hover */
+        }
+
+        /* Tùy chỉnh thanh cuộn cho hiệu ứng mượt mà */
+        .left-sidebar::-webkit-scrollbar,
+        .right-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .left-sidebar::-webkit-scrollbar-track,
+        .right-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .left-sidebar::-webkit-scrollbar-thumb,
+        .right-sidebar::-webkit-scrollbar-thumb {
+            background-color: rgba(203, 213, 225, 0.6);
+            border-radius: 20px;
+        }
+
+        /* Hiệu ứng hover cho thanh cuộn */
+        .left-sidebar:hover::-webkit-scrollbar-thumb,
+        .right-sidebar:hover::-webkit-scrollbar-thumb {
+            background-color: rgba(148, 163, 184, 0.8);
+        }
+
+        /* CSS cho dropdown menu */
         .dropdown-menu {
             display: none;
             opacity: 0;
@@ -118,33 +199,45 @@
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
         }
 
-        @media (max-width: 768px) {
-            .mobile-menu {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                z-index: 50;
-                padding: 1rem;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        @media (max-width: 1200px) {
+            .left-sidebar {
+                width: 240px;
+            }
+            
+            .right-sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .blogs-container {
                 flex-direction: column;
             }
-
-            .sidebar {
+            
+            .left-sidebar, .right-sidebar {
                 width: 100%;
+                max-width: 100%;
+                height: auto;
+                position: relative;
+                border: none;
+                overflow: visible;
+                max-height: 300px;
             }
-
-            .sidebar.collapsed {
-                width: 0;
+            
+            .left-sidebar {
+                border-bottom: 1px solid #e5e7eb;
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
             }
-
+            
             .right-sidebar {
-                display: none;
+                border-top: 1px solid #e5e7eb;
+                padding-top: 1rem;
+                margin-top: 1rem;
             }
-
-            .right-sidebar-mobile {
-                display: block;
+            
+            .main-content-wrapper {
+                max-width: 100%;
             }
         }
 
@@ -165,7 +258,6 @@
         .emoji-picker.active {
             display: block;
         }
-
 
         /* aaaaaaaaaaaaaaa */
         /* Popup Modal - Global */
@@ -262,17 +354,16 @@
             background-color: #f7fafc;
         }
 
-        /* Scroll To Top Button */
+        /* Nút lên đầu trang */
         #scroll-to-top {
             position: fixed;
             bottom: 24px;
             right: 24px;
             background-color: #3b82f6;
-            /* blue-500 */
             color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 9999px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -280,14 +371,13 @@
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 999;
+            cursor: pointer;
         }
 
         #scroll-to-top.show {
             opacity: 1;
             visibility: visible;
         }
-
-        
     </style>
     
     <!-- CSRF Token -->
@@ -296,37 +386,61 @@
 @section('content')
     {{-- @include('frontend.layouts.page_title') --}}
     
-    <body class="bg-gray-50 font-sans">
-        <main class="container mx-auto px-4 py-6 flex flex-col lg:flex-row">
-
-
-            <!-- Left Menu -->
+    <div class="blogs-container">
+        <!-- Left Menu -->
+        <div class="left-sidebar">
             @include('Tuongtac::frontend.blogs.left-partial')
+        </div>
 
-            <!-- Main Content -->
-
+        <!-- Main Content -->
+        <div class="main-content-wrapper">
             @yield('inner-content')
+        </div>
 
-
-            <!-- Right Menu -->
+        <!-- Right Menu -->
+        <div class="right-sidebar">
             @include('Tuongtac::frontend.blogs.right-partial')
+        </div>
+    </div>
 
+    <!-- Nút cuộn lên đầu trang -->
+    <div id="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
-            <div id="spinner" style="display: none;">
-                <div class="spinner"></div>
-            </div>
-           
-        </main>
+    <script>
+        var csrfToken = '{{ csrf_token() }}';
 
-        <script>
-            var csrfToken = '{{ csrf_token() }}';
-        </script>
+        // Xử lý hiệu ứng nút cuộn lên đầu trang
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollTopBtn = document.getElementById('scroll-to-top');
+            
+            // Hiển thị nút khi cuộn xuống
+            function toggleScrollButton() {
+                if (document.documentElement.scrollTop > 300) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            }
+            
+            // Xử lý sự kiện khi cuộn trang
+            window.addEventListener('scroll', toggleScrollButton);
+            
+            // Xử lý sự kiện khi nhấp vào nút
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 
-        <!-- Social Interactions JavaScript -->
-        @socialInteractions
+    <!-- Social Interactions JavaScript -->
+    @socialInteractions
 
-        <!-- Additional Scripts -->
-        @yield('botscript')
-    </body>
+    <!-- Additional Scripts -->
+    @yield('botscript')
 @endsection
 

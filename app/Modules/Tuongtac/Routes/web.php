@@ -16,6 +16,7 @@ use App\Modules\Tuongtac\Controllers\TTagController;
 use App\Modules\Tuongtac\Controllers\TSurveyController;
 use App\Http\Controllers\Frontend\GroupFrontendController;
 use App\Http\Controllers\Frontend\ProfileController;
+use App\Http\Controllers\RatingController;
 // Define routes here
 
 Route::group(['prefix'=>'admin', 'middleware' => 'admin.auth', 'as' => 'admin.'], function(){
@@ -53,7 +54,7 @@ Route::group( [    'as' => 'front.' ],function(){
 
     Route::post('/react', [TMotionItemController::class, 'react'])->name('reacts.react');
     Route::post('/bookmark', [TRecommendController::class, 'toggleBookmark'])->name('bookmarks.bookmark');
-    Route::post('/vote', [TVoteController::class, 'vote'])->name('votes.vote');
+    Route::post('/vote', [RatingController::class, 'store'])->name('votes.vote');
     Route::get('/editprofile', [ProfileController::class, 'edit'])->name('userpages.edituser');
     Route::post('/updateuser', [ProfileController::class, 'update'])->name('userpages.updateuser');
     Route::post('/changepass', [ProfileController::class, 'changePassword'])->name('userpages.changepassword');

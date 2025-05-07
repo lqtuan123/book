@@ -23,7 +23,7 @@ use App\Models\Rating;
 
 class GroupFrontendController extends Controller
 {
-    const REQUIRED_POINTS_TO_CREATE_GROUP = 100; // Số điểm cần thiết để tạo group
+    const REQUIRED_POINTS_TO_CREATE_GROUP = 0; // Số điểm cần thiết để tạo group
 
     public function index(Request $request)
     {
@@ -480,7 +480,7 @@ class GroupFrontendController extends Controller
                     
                 foreach ($activeMembers as $member) {
                     // URL profile người dùng
-                    $member->url = route('front.userpages.viewuser', $member->id);
+                    $member->url = route('front.user.profile', $member->id);
                     
                     // Số lượng tương tác (comment + like) của thành viên
                     $member->interactions_count = 

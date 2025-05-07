@@ -273,7 +273,7 @@
 </style>
 @endsection
 @section('inner-content')
-<div class="container" style="max-width: 692.8px;">
+<div >
     <div class="back-button">
         <a href="{{ url()->previous() }}" class="btn-secondary">
             ← Quay lại

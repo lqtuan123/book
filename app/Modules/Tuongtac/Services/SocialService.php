@@ -192,8 +192,7 @@ class SocialService
             throw new \Exception('Invalid reaction type');
         }
         
-        // Add points for engagement
-        TUserpage::add_points($userId, 1);
+        // Add points for engagemen
         
         // Get or create motion item
         $motionItem = TMotionItem::getOrCreate($itemId, $itemCode);

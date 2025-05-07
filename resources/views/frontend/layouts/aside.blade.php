@@ -366,6 +366,129 @@ $topLeaderboardUsers = \App\Models\User::select('users.id', 'users.full_name', '
         color: #cbd5e1;
     }
     
+    /* Tùy chỉnh scrollbar cho tab-content */
+    .tab-content {
+        max-height: 350px;
+        overflow-y: auto;
+        scrollbar-width: none; /* Ẩn thanh cuộn mặc định trên Firefox */
+        -ms-overflow-style: none; /* Ẩn thanh cuộn mặc định trên IE/Edge */
+        scroll-behavior: smooth;
+        mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+        padding: 10px 5px 10px 0;
+        margin: -10px -5px -10px 0;
+    }
+    
+    .tab-content::-webkit-scrollbar {
+        width: 5px;
+        background: transparent;
+    }
+    
+    .tab-content::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 10px 0;
+    }
+    
+    .tab-content::-webkit-scrollbar-thumb {
+        background-color: rgba(203, 213, 225, 0);
+        border-radius: 20px;
+        transition: background-color 0.3s ease;
+        border: 1px solid rgba(203, 213, 225, 0);
+    }
+    
+    .tab-content:hover::-webkit-scrollbar-thumb {
+        background-color: rgba(148, 163, 184, 0.5);
+        border: 1px solid rgba(203, 213, 225, 0.1);
+    }
+    
+    .tab-content:hover::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(148, 163, 184, 0.8);
+    }
+    
+    /* Tạo hiệu ứng fade-out ở trên và dưới */
+    .tab-content::before,
+    .tab-content::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 25px;
+        z-index: 10;
+        pointer-events: none;
+    }
+    
+    .tab-content::before {
+        top: 0;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    
+    .tab-content::after {
+        bottom: 0;
+        background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    
+    /* Ẩn thanh cuộn phần tử cha khi phần tử con đang cuộn */
+    .aside-wrapper {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+        position: relative;
+    }
+    
+    .aside-wrapper::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Opera */
+    }
+    
+    /* Tạo hiệu ứng hover đặc biệt cho mỗi card item */
+    .sidebar-card {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-left: 3px solid transparent;
+    }
+    
+    .sidebar-card:hover {
+        background-color: rgba(241, 245, 249, 0.8);
+        transform: translateX(5px);
+        border-left: 3px solid #3b82f6;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+    
+    /* Thêm hiệu ứng loading khi chuyển tab */
+    .tab-content.loading {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .tab-content.loading::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 100;
+    }
+    
+    .tab-content.loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        border: 3px solid rgba(59, 130, 246, 0.3);
+        border-radius: 50%;
+        border-top-color: #3b82f6;
+        z-index: 101;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .sidebar-section {
@@ -402,10 +525,23 @@ $topLeaderboardUsers = \App\Models\User::select('users.id', 'users.full_name', '
         .card-text {
             font-size: 0.8rem;
         }
+        
+        .tab-content {
+            max-height: none;
+            overflow-y: visible;
+        }
+    }
+    
+    /* Thêm styles cho container bên ngoài để phù hợp với index.blade.php */
+    @media (min-width: 1024px) {
+        .aside-wrapper {
+            height: 100%;
+            padding-right: 0.5rem;
+        }
     }
 </style>
 
-<div class="lg:w-1/3">
+<div class="aside-wrapper">
     <!-- Community Activity -->
     <div class="sidebar-section">
         <div class="flex justify-between items-center mb-4">
@@ -599,10 +735,33 @@ $topLeaderboardUsers = \App\Models\User::select('users.id', 'users.full_name', '
                     content.classList.add('hidden');
                 });
                 
-                // Show the corresponding content
+                // Add loading animation
                 const contentId = tab.id.replace('tab-', '') + '-content';
-                document.getElementById(contentId).classList.remove('hidden');
+                const targetContent = document.getElementById(contentId);
+                
+                // Simulating loading for smoother transitions
+                targetContent.classList.add('loading');
+                setTimeout(() => {
+                    targetContent.classList.remove('hidden');
+                    
+                    // Remove loading after a short delay
+                    setTimeout(() => {
+                        targetContent.classList.remove('loading');
+                    }, 300);
+                }, 100);
             });
+        });
+        
+        // Smooth scrolling for tab-content elements
+        contents.forEach(content => {
+            content.addEventListener('wheel', function(e) {
+                const scrollSpeed = 30; // Điều chỉnh tốc độ cuộn
+                
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    this.scrollTop += (e.deltaY > 0) ? scrollSpeed : -scrollSpeed;
+                }
+            }, { passive: false });
         });
     });
 </script>

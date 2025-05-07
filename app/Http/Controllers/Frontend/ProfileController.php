@@ -155,6 +155,9 @@ class ProfileController extends Controller
                 ? $motionItem->getTotalReactionsCount()
                 : 0;
                 
+            // Tính tổng số like (cả recommends và motion_items)
+            $post->total_likes = $post->likes_count + $post->likes_motion_count;
+                
             // Kiểm tra xem người dùng đã bookmark bài viết chưa
             $post->is_bookmarked = TRecommend::hasBookmarked($post->id, 'tblog');
         }
@@ -231,7 +234,7 @@ class ProfileController extends Controller
             ->limit(5) // Giới hạn 5 bài viết
             ->get();
     
-        return view("{$this->front_view}.profile.profiletest", $data);
+        return view("{$this->front_view}.profile.profile", $data);
     }
     
 
@@ -655,6 +658,9 @@ class ProfileController extends Controller
                 ? $motionItem->getTotalReactionsCount()
                 : 0;
                 
+            // Tính tổng số like (cả recommends và motion_items)
+            $post->total_likes = $post->likes_count + $post->likes_motion_count;
+                
             // Kiểm tra xem người dùng đã bookmark bài viết chưa (nếu đã đăng nhập)
             if (Auth::check()) {
                 $post->is_bookmarked = TRecommend::hasBookmarked($post->id, 'tblog');
@@ -683,7 +689,7 @@ class ProfileController extends Controller
             ->limit(5) // Giới hạn 5 bài viết
             ->get();
         
-        return view("{$this->front_view}.profile.profiletest", $data);
+        return view("{$this->front_view}.profile.profile", $data);
     }
 
     public function updatePrivacySettings(Request $request)
@@ -718,5 +724,22 @@ class ProfileController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    private function calculateTotalLikes($postId) {
+        // Đếm số lượt like từ bảng t_recommends
+        $recommendCount = DB::table('t_recommends')
+            ->where('item_id', $postId)
+            ->where('item_code', 'tblog')
+            ->count();
+            
+        // Đếm số lượt like từ bảng t_motion_items
+        $motionItem = TMotionItem::where('item_id', $postId)
+            ->where('item_code', 'tblog')
+            ->first();
+        $motionCount = $motionItem ? $motionItem->getTotalReactionsCount() : 0;
+        
+        // Tổng số lượt like
+        return $recommendCount + $motionCount;
     }
 }

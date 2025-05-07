@@ -535,33 +535,18 @@ class TBlogController extends Controller
         return view('Tuongtac::frontend.blogs.index', $data);
     }
 
-    public function addpageblog($id)
+    public function addpageblog($id, $group_id = null)
     {
-        $user  = auth()->user();
-        if (!$user) {
-            return redirect()->route('front.login');
-        }
-        $data['page_id'] = $id;
         $data['detail'] = \App\Models\SettingDetail::find(1);
-
-        $user  = auth()->user();
-        ////
-        $data['pagetitle'] = "Cộng đồng itcctv";
-        $data['pagebreadcrumb'] = '<nav aria-label="breadcrumb" class="theme-breadcrumb">
-         <ol class="breadcrumb">
-             <li class="breadcrumb-item"><a href="">Trang chủ</a></li>';
-
-        $data['pagebreadcrumb'] .= '  </ol> </nav>';
-        $data['page_up_title'] = 'Cộng đồng itcctv';
-        $data['page_subtitle'] = "Cộng đồng itcctv";
-        $data['page_title'] = " ";
-        $data['hotbutton_title'] = "Cộng đồng itcctv";
-        $data['hotbutton_subtitle'] = "được xác nhận bởi itcctv";
-        $data['hotbutton_link'] = "";
-        $data['page_up_title'] = "Cộng đồng itcctv ";
-        $data['tags'] = TTag::orderBy('title', 'ASC')->get();
-        $data['toptags']  =  TTag::where('id', '<=', 5)->orderBy('hit')->get();
-
+        $data['tags'] = \App\Modules\Tuongtac\Models\TTag::orderBy('title', 'asc')->get();
+        $data['toptags'] = \App\Modules\Tuongtac\Models\TTag::orderBy('hit', 'desc')->limit(15)->get();
+        $data['page_id'] = $id;
+        
+        // Truyền group_id vào view nếu có
+        if ($group_id !== null) {
+            $data['group_id'] = $group_id;
+        }
+        
         return view('Tuongtac::frontend.blogs.create', $data);
     }
     public function check_quyendangbai($page)
@@ -608,10 +593,17 @@ class TBlogController extends Controller
     }
     public function create()
     {
-        $user  = auth()->user();
+        $user = auth()->user();
         if (!$user) {
             return redirect()->route('front.login');
         }
+        
+        // Lấy tham số referrer từ query string để biết người dùng đến từ đâu
+        $referrer = request()->query('ref');
+        
+        // Mặc định group_id = 0 nếu người dùng đến từ trang profile
+        $group_id = 0;
+        
         $page = TPage::where('item_id', $user->id)->where('item_code', 'user')->first();
         if (!$page) {
             $slug = Str::slug($user->full_name);
@@ -629,7 +621,9 @@ class TBlogController extends Controller
             $data['status'] = "active";
             $page = TPage::create($data);
         }
-        return $this->addpageblog($page->id);
+        
+        // Truyền giá trị group_id vào view để form sử dụng
+        return $this->addpageblog($page->id, $group_id);
     }
     public function store(Request $request)
     {

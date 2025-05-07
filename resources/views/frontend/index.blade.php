@@ -55,12 +55,86 @@ $topCategories = \App\Modules\Book\Models\BookType::withCount(['books' => functi
             background: linear-gradient(45deg, #64748b, #94a3b8);
             box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3);
         }
+
+        /* Thiết kế cuộn riêng biệt cho Book và Aside */
+        .book-aside-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 1024px) {
+            .book-aside-container {
+                flex-direction: row;
+            }
+        }
+        
+        /* Phần nội dung chính (book) */
+        .book-section {
+            position: relative;
+            overflow: visible;
+            width: 100%;
+        }
+        
+        /* Phần sidebar (aside) */
+        .aside-section {
+            width: 100%;
+            position: relative;
+        }
+        
+        @media (min-width: 1024px) {
+            /* Trên màn hình lớn, book section chiếm 2/3 */
+            .book-section {
+                width: 66.666667%;
+                flex: 0 0 66.666667%;
+            }
+            
+            /* Trên màn hình lớn, aside section chiếm 1/3 và sticky */
+            .aside-section {
+                width: 33.333333%;
+                flex: 0 0 33.333333%;
+                position: sticky;
+                top: 1rem;
+                max-height: calc(100vh - 2rem);
+                overflow-y: hidden;
+                align-self: flex-start;
+            }
+            
+            /* Chỉ hiển thị thanh cuộn khi hover vào aside */
+            .aside-section:hover {
+                overflow-y: auto;
+            }
+        }
+        
+        /* Tùy chỉnh thanh cuộn cho aside */
+        .aside-section::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .aside-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .aside-section::-webkit-scrollbar-thumb {
+            background-color: rgba(203, 213, 225, 0.6);
+            border-radius: 10px;
+        }
+        
+        .aside-section:hover::-webkit-scrollbar-thumb {
+            background-color: rgba(148, 163, 184, 0.8);
+        }
+
+        /* Hỗ trợ trình duyệt Firefox */
+        .aside-section {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 225, 0.6) transparent;
+        }
     </style>
 @endsection
 
 @section('content')
     @include('frontend.layouts.bannertop')
-    <div class="py-8">
+    
         <!-- Book Categories Section - Full Width -->
         <section class="mb-12">
             <div class="flex justify-between items-center mb-6">
@@ -94,16 +168,15 @@ $topCategories = \App\Modules\Book\Models\BookType::withCount(['books' => functi
         </section>
 
         <!-- Book and Aside Sections -->
-        <div class="flex flex-col lg:flex-row gap-8">
-            @include('frontend.layouts.book')
-            @include('frontend.layouts.aside')
-            
-            
-                
-                
+        <div class="book-aside-container gap-8">
+            <div class="book-section pr-0 lg:pr-4">
+                @include('frontend.layouts.book')
+            </div>
+            <div class="aside-section pl-0 lg:pl-4">
+                @include('frontend.layouts.aside')
             </div>
         </div>
-    </div>
+    
 @endsection
 
 @section('scripts')
