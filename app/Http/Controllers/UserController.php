@@ -163,7 +163,7 @@ class UserController extends Controller
         <li class="breadcrumb-item"><a href="#">/</a></li>
         <li class="breadcrumb-item  " aria-current="page"><a href="' . route('admin.user.index') . '">Người dùng</a></li>
         <li class="breadcrumb-item active" aria-current="page"> tạo người dùng </li>';
-        $ugroups = UGroup::where('status', 'active')->orderBy('id', 'ASC')->get();
+        // $ugroups = UGroup::where('status', 'active')->orderBy('id', 'ASC')->get();
         $uroles = \App\Models\Role::where('status', 'active')->where('alias', '<>', 'admin')->orderBy('id', 'ASC')->get();
         return view('backend.users.create', compact('breadcrumb', 'active_menu', 'ugroups', 'uroles'));
     }
@@ -187,7 +187,7 @@ class UserController extends Controller
             'phone' => 'string|required',
             'password' => 'string|nullable',
             'address' => 'string|required',
-            'ugroup_id' => 'numeric|required',
+            // 'ugroup_id' => 'numeric|required',
             'role' => 'required|string',
             'status' => 'nullable|in:active,inactive',
         ]);
@@ -257,7 +257,7 @@ class UserController extends Controller
             <li class="breadcrumb-item"><a href="#">/</a></li>
             <li class="breadcrumb-item  " aria-current="page"><a href="' . route('admin.user.index') . '">Người dùng</a></li>
             <li class="breadcrumb-item active" aria-current="page"> điều chỉnh người dùng </li>';
-            $ugroups = UGroup::where('status', 'active')->orderBy('id', 'ASC')->get();
+            // $ugroups = UGroup::where('status', 'active')->orderBy('id', 'ASC')->get();
             $uroles = \App\Models\Role::where('status', 'active')->where('alias', '<>', 'admin')->orderBy('id', 'ASC')->get();
 
             return view('backend.users.edit', compact('breadcrumb', 'user', 'active_menu', 'ugroups', 'uroles'));
@@ -287,7 +287,7 @@ class UserController extends Controller
                 'photo' => 'string|nullable',
                 'password' => 'string|nullable',
                 'address' => 'string|required',
-                'ugroup_id' => 'numeric|required',
+                // 'ugroup_id' => 'numeric|required',
 
                 'status' => 'nullable|in:active,inactive',
             ]);

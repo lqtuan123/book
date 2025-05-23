@@ -614,4 +614,63 @@ document.addEventListener("DOMContentLoaded", function () {
     if (hasResources) {
         loadBookResources();
     }
+
+    // Xử lý modal đăng nhập
+    const loginModal = document.getElementById('loginModal');
+    if (loginModal) {
+        // Lưu trữ phần tử cuối cùng được focus trước khi mở modal
+        let lastFocusedElement = null;
+
+        // Xử lý khi modal được mở
+        loginModal.addEventListener('show.bs.modal', function() {
+            lastFocusedElement = document.activeElement;
+            
+            // Tìm tất cả các phần tử có thể focus trong modal
+            const focusableElements = loginModal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            
+            // Lưu phần tử đầu tiên và cuối cùng có thể focus
+            const firstFocusableElement = focusableElements[0];
+            const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+            // Xử lý khi người dùng nhấn Tab
+            loginModal.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        // Shift + Tab
+                        if (document.activeElement === firstFocusableElement) {
+                            e.preventDefault();
+                            lastFocusableElement.focus();
+                        }
+                    } else {
+                        // Tab
+                        if (document.activeElement === lastFocusableElement) {
+                            e.preventDefault();
+                            firstFocusableElement.focus();
+                        }
+                    }
+                }
+            });
+
+            // Đặt focus vào phần tử đầu tiên khi modal mở
+            setTimeout(() => {
+                firstFocusableElement.focus();
+            }, 100);
+        });
+
+        // Xử lý khi modal đóng
+        loginModal.addEventListener('hidden.bs.modal', function() {
+            // Trả focus về phần tử trước đó
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+            }
+        });
+
+        // Xử lý khi modal hiển thị
+        loginModal.addEventListener('shown.bs.modal', function() {
+            // Đảm bảo modal không bị ẩn khỏi screen reader
+            loginModal.removeAttribute('aria-hidden');
+        });
+    }
 });

@@ -33,7 +33,7 @@
     </script>
     
     <script src="{{ asset('frontend/js/book/_show_book.js') }}"></script>
-    <script src="{{ asset('js/book-mention.js') }}"></script>
+    {{-- <script src="{{ asset('js/book-mention.js') }}"></script> --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Khởi tạo mention cho tất cả các textarea comment

@@ -25,7 +25,7 @@
                     </nav>
                     
                     <!-- Tab contents -->
-                    <div class="tab-content">
+                    <div class="tab-content login-tab-content">
                         <!-- Login Tab -->
                         <div id="login-tab" class="tab-pane active">
                             <form method="POST" action="{{ route('front.login.submit') }}" class="space-y-4">
@@ -135,6 +135,11 @@
     
     .tab-pane.hidden {
         display: none;
+    }
+    
+    /* Đảm bảo tab-content của modal login luôn hiển thị */
+    .login-tab-content {
+        display: block !important;
     }
     
     /* Đảm bảo modal hiển thị đúng */
